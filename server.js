@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 // Cargar credenciales de Google
-const credentials = JSON.parse(fs.readFileSync('credentials.json'));
+const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
 const client = new google.auth.JWT(
     credentials.client_email,
     null,
