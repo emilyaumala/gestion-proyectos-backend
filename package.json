@@ -2,10 +2,11 @@
   "name": "gestion-proyectos",
   "version": "1.0.0",
   "main": "index.js",
-"scripts": {
-  "dev": "vite"
-}
-,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -16,6 +17,10 @@
     "express": "^4.21.2",
     "fs": "^0.0.1-security",
     "googleapis": "^146.0.0",
+    "mongoose": "^8.12.1",
     "pg": "^8.13.3"
+  },
+  "devDependencies": {
+    "vite": "^6.2.1"
   }
 }
