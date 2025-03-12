@@ -6,8 +6,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Conexión a MongoDB (asegurate de reemplazar tu URI de MongoDB)
-const mongoURI = process.env.MONGO_URI || 'mongodb://iot:Constecoin2021@157.100.18.147:53236/'; // Usa el URI de tu base de datos MongoDB
+// Conexión a MongoDB (usando la URI de MongoDB Atlas o local)
+const mongoURI = 'mongodb://iot:Constecoin2021@157.100.18.147:53236/Proyectos';
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Conexión a MongoDB exitosa'))
   .catch(err => console.error('Error al conectar con MongoDB:', err));
@@ -27,11 +27,9 @@ const proyectoSchema = new mongoose.Schema({
 
 const Proyecto = mongoose.model('Proyecto', proyectoSchema);
 
+// Ruta para guardar proyectos
 app.post("/guardar", async (req, res) => {
     try {
-        console.log("Datos recibidos en /guardar:", req.body);
-
-        // Validar que los datos no están vacíos
         const datos = {
             nombre_oportunidad: req.body.nombre_oportunidad || "N/A",
             asesor_comercial: req.body.asesor_comercial || "N/A",
@@ -44,33 +42,19 @@ app.post("/guardar", async (req, res) => {
             cierre_probable: req.body.cierre_probable || "N/A"
         };
 
-        if (Object.values(datos).every(val => val === "N/A")) {
-            console.error("❌ Error: Todos los datos están vacíos");
-            return res.status(400).send({ message: "No se enviaron datos válidos" });
-        }
-
-        // Crear un nuevo proyecto en la base de datos
+        // Crear un nuevo proyecto
         const nuevoProyecto = new Proyecto(datos);
         await nuevoProyecto.save();
 
-        console.log("✅ Datos guardados en MongoDB:", datos);
-        res.status(200).send({ message: "Datos guardados correctamente en MongoDB" });
-
+        res.status(200).send({ message: "Datos guardados correctamente" });
     } catch (error) {
-        console.error("Error al guardar en MongoDB:", error);
-        res.status(500).send({ message: "Error interno del servidor", error: error.message });
+        console.error("Error al guardar:", error);
+        res.status(500).send({ message: "Error al guardar en la base de datos" });
     }
 });
 
-// Configurar el puerto
-const port = 5000;
-app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
-});
-
-
-// Configurar el puerto
-const port = 5000;
+// Definir el puerto (solo una vez)
+const port = process.env.PORT || 5000;  // Usar un puerto dinámico o 5000 como fallback
 app.listen(port, () => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
 });
