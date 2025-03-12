@@ -11,7 +11,7 @@ const mongoURI = process.env.MONGO_URI || 'mongodb://iot:Constecoin2021@157.100.
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Conexión a MongoDB exitosa'))
   .catch(err => console.error('Error al conectar con MongoDB:', err));
-
+    
 // Definir el modelo de datos para los proyectos
 const proyectoSchema = new mongoose.Schema({
   nombre_oportunidad: String,
