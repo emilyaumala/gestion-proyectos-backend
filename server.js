@@ -27,9 +27,9 @@ const proyectoSchema = new mongoose.Schema({
 
 const Proyecto = mongoose.model('Proyecto', proyectoSchema);
 
+// Ruta para guardar proyectos
 app.post("/guardar", async (req, res) => {
     try {
-        console.log("Datos recibidos en /guardar:", req.body);
 
         // Validar que los datos no están vacíos
         const datos = {
