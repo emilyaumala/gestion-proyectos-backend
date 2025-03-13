@@ -64,11 +64,17 @@ app.get("/responsables-tecnicos", (req, res) => {
 // ✅ Ruta para guardar un proyecto
 app.post("/guardar", async (req, res) => {
     try {
+        // Verificar que el cliente exista en la base de datos
+        const clienteExistente = await Cliente.findById(req.body.cliente);
+        if (!clienteExistente) {
+            return res.status(400).json({ message: "Cliente no encontrado." });
+        }
+
         const nuevoProyecto = new Proyecto(req.body);
         await nuevoProyecto.save();
         res.status(200).json({ message: "Proyecto guardado correctamente" });
     } catch (error) {
-        res.status(500).json({ message: "Error al guardar el proyecto" });
+        res.status(500).json({ message: "Error al guardar el proyecto", error: error.message });
     }
 });
 
@@ -77,6 +83,7 @@ const port = 5000;
 app.listen(port, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${port}`);
 });
+
 
 
 
