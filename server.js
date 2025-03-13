@@ -17,7 +17,6 @@ const clienteSchema = new mongoose.Schema({
     ruc: String,
     cliente: String, // Nombre del cliente
 });
-const Cliente = mongoose.model("Cliente", clienteSchema, "Cliente");
 
 // 🟢 Modelo Proyecto
 const proyectoSchema = new mongoose.Schema({
@@ -44,7 +43,16 @@ app.get("/clientes", async (req, res) => {
         res.status(500).send({ message: "Error al obtener clientes", error: error.message });
     }
 });
-
+// ✅ Rutas para obtener datos / Proyecto
+app.get("/proyectos", async (req, res) => {
+    try {
+        const proyectos = await Proyecto.find();  // Obtener todos los clientes
+        res.status(200).json(proyectos);  // Retorna los clientes como respuesta
+    } catch (error) {
+        console.error("❌ Error al obtener el proyecto:", error);
+        res.status(500).send({ message: "Error al obtener proyecto.", error: error.message });
+    }
+});
 app.get("/fases-venta", (req, res) => {
     res.json(["Prospecto", "Cotización enviada", "Negociación", "Cierre"]);
 });
