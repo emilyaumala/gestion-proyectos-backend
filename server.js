@@ -3,7 +3,13 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const app = express();
-app.use(cors());
+
+// Configuración de CORS para permitir solicitudes desde el frontend
+const corsOptions = {
+    origin: 'https://gestion-proyectos-frontend-topaz.vercel.app', // Reemplaza con la URL de tu frontend
+    methods: ['GET', 'POST'],
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Conexión a MongoDB
