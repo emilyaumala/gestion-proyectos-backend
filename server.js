@@ -46,10 +46,10 @@ app.get("/clientes", async (req, res) => {
     }
 });
 // ✅ Rutas para obtener datos / Proyecto
-app.get("/proyectos", async (req, res) => {
+app.get("/nombreProyectos", async (req, res) => {
     try {
         const proyectos = await Proyecto.find();  // Obtener todos los clientes
-        res.status(200).json(proyectos);  // Retorna los clientes como respuesta
+        res.status(200).json(nombreProyectos);  // Retorna los clientes como respuesta
     } catch (error) {
         console.error("❌ Error al obtener el proyecto:", error);
         res.status(500).send({ message: "Error al obtener proyecto.", error: error.message });
