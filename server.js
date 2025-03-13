@@ -23,6 +23,7 @@ const Cliente = mongoose.model("Cliente", clienteSchema, "Cliente");
 const proyectoSchema = new mongoose.Schema({
     cliente: { type: mongoose.Schema.Types.ObjectId, ref: "Cliente", required: true },
     nombreProyecto: { type: String, required: true },
+    area: { type: String, required: true },
     montoEstimado: { type: Number, required: true },
     faseVenta: { type: String, required: true },
     probabilidadVenta: { type: String, required: true },
@@ -38,7 +39,11 @@ const areaSchema = new mongoose.Schema({
     area: String
 });
 const Area = mongoose.model("Area", areaSchema, "Area");
-
+// 🟢 Modelo Fase de Venta
+const faseVentaSchema = new mongoose.Schema({
+    faseVenta: String, 
+});
+const Cliente = mongoose.model("FaseVenta", clienteSchema, "FaseVenta");
 // ✅ Rutas para obtener datos
 app.get("/clientes", async (req, res) => {
     try {
@@ -59,9 +64,15 @@ app.get("/areas", async (req, res) => {
         res.status(500).send({ message: "Error al obtener areas", error: error.message });
     }
 });
-
-app.get("/fases-venta", (req, res) => {
-    res.json(["Prospecto", "Cotización enviada", "Negociación", "Cierre"]);
+// ✅ Rutas para obtener datos /área
+app.get("/fases-venta", async (req, res) => {
+    try {
+        const fases-venta = await FaseVenta.find();  // Obtener todos los clientes
+        res.status(200).json(areas);  // Retorna los clientes como respuesta
+    } catch (error) {
+        console.error("❌ Error al obtener areas:", error);
+        res.status(500).send({ message: "Error al obtener fases-venta", error: error.message });
+    }
 });
 
 app.get("/probabilidad-venta", (req, res) => {
