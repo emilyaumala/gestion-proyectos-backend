@@ -17,6 +17,8 @@ const clienteSchema = new mongoose.Schema({
     ruc: String,
     cliente: String, // Nombre del cliente
 });
+const Cliente = mongoose.model('Cliente', clienteSchema);
+module.exports = Cliente;
 
 // 🟢 Modelo Proyecto
 const proyectoSchema = new mongoose.Schema({
