@@ -36,10 +36,11 @@ const Proyecto = mongoose.model("Proyecto", proyectoSchema, "Proyecto");
 // ✅ Rutas para obtener datos
 app.get("/clientes", async (req, res) => {
     try {
-        const clientes = await Cliente.find({}, "_id nombre");
-        res.json(clientes);
+        const clientes = await Cliente.find();  // Obtener todos los clientes
+        res.status(200).json(clientes);  // Retorna los clientes como respuesta
     } catch (error) {
-        res.status(500).json({ message: "Error al obtener clientes" });
+        console.error("❌ Error al obtener clientes:", error);
+        res.status(500).send({ message: "Error al obtener clientes", error: error.message });
     }
 });
 
