@@ -65,9 +65,9 @@ app.get("/areas", async (req, res) => {
     }
 });
 // ✅ Rutas para obtener datos /área
-app.get("/fases-venta", async (req, res) => {
+app.get("/fasesVenta", async (req, res) => {
     try {
-        const fases-venta = await FaseVenta.find();  // Obtener todos los clientes
+        const fasesVenta = await FaseVenta.find();  // Obtener todos los clientes
         res.status(200).json(areas);  // Retorna los clientes como respuesta
     } catch (error) {
         console.error("❌ Error al obtener areas:", error);
