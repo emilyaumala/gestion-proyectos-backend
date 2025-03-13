@@ -3,13 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const app = express();
-
-// Configuración de CORS para permitir solicitudes desde el frontend
-const corsOptions = {
-    origin: 'https://gestion-proyectos-frontend-topaz.vercel.app', // Reemplaza con la URL de tu frontend
-    methods: ['GET', 'POST'],
-};
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 // Conexión a MongoDB
@@ -23,7 +17,7 @@ const clienteSchema = new mongoose.Schema({
     ruc: String,
     cliente: String, // Nombre del cliente
 });
-const Cliente = mongoose.model('Cliente', clienteSchema);
+const Cliente = mongoose.model("Cliente", clienteSchema, "Cliente");
 
 // 🟢 Modelo Proyecto
 const proyectoSchema = new mongoose.Schema({
@@ -70,17 +64,11 @@ app.get("/responsables-tecnicos", (req, res) => {
 // ✅ Ruta para guardar un proyecto
 app.post("/guardar", async (req, res) => {
     try {
-        // Verificar que el cliente exista en la base de datos
-        const clienteExistente = await Cliente.findById(req.body.cliente);
-        if (!clienteExistente) {
-            return res.status(400).json({ message: "Cliente no encontrado." });
-        }
-
         const nuevoProyecto = new Proyecto(req.body);
         await nuevoProyecto.save();
         res.status(200).json({ message: "Proyecto guardado correctamente" });
     } catch (error) {
-        res.status(500).json({ message: "Error al guardar el proyecto", error: error.message });
+        res.status(500).json({ message: "Error al guardar el proyecto" });
     }
 });
 
@@ -89,6 +77,8 @@ const port = 5000;
 app.listen(port, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${port}`);
 });
+
+
 
 
 
