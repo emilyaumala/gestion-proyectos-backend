@@ -1,5 +1,3 @@
-// server.js (Backend)
-
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -20,7 +18,6 @@ const clienteSchema = new mongoose.Schema({
     cliente: String, // Nombre del cliente
 });
 const Cliente = mongoose.model('Cliente', clienteSchema);
-module.exports = Cliente;
 
 // 🟢 Modelo Proyecto
 const proyectoSchema = new mongoose.Schema({
@@ -48,18 +45,6 @@ app.get("/clientes", async (req, res) => {
     }
 });
 
-// ✅ Ruta para obtener todos los proyectos con el cliente poblado
-app.get("/nombreProyectos", async (req, res) => {
-    try {
-        const proyectos = await Proyecto.find().populate('cliente');  // Poblar el campo 'cliente'
-        res.status(200).json(proyectos);  // Retorna los proyectos con los clientes poblados
-    } catch (error) {
-        console.error("❌ Error al obtener el proyecto:", error);
-        res.status(500).send({ message: "Error al obtener proyecto.", error: error.message });
-    }
-});
-
-// Rutas adicionales para obtener otras opciones (fases, probabilidades, responsables)
 app.get("/fases-venta", (req, res) => {
     res.json(["Prospecto", "Cotización enviada", "Negociación", "Cierre"]);
 });
@@ -92,6 +77,7 @@ const port = 5000;
 app.listen(port, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${port}`);
 });
+
 
 
 
