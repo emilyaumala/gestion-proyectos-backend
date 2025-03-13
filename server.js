@@ -33,6 +33,11 @@ const proyectoSchema = new mongoose.Schema({
     observaciones: { type: String },
 });
 const Proyecto = mongoose.model("Proyecto", proyectoSchema, "Proyecto");
+// 🟢 Modelo Área
+const areaSchema = new mongoose.Schema({
+    area: String
+});
+const Area = mongoose.model("Area", areaSchema, "Area");
 
 // ✅ Rutas para obtener datos
 app.get("/clientes", async (req, res) => {
@@ -42,6 +47,16 @@ app.get("/clientes", async (req, res) => {
     } catch (error) {
         console.error("❌ Error al obtener clientes:", error);
         res.status(500).send({ message: "Error al obtener clientes", error: error.message });
+    }
+});
+// ✅ Rutas para obtener datos /área
+app.get("/areas", async (req, res) => {
+    try {
+        const areas = await Area.find();  // Obtener todos los clientes
+        res.status(200).json(areas);  // Retorna los clientes como respuesta
+    } catch (error) {
+        console.error("❌ Error al obtener areas:", error);
+        res.status(500).send({ message: "Error al obtener areas", error: error.message });
     }
 });
 
