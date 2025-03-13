@@ -64,13 +64,13 @@ app.get("/areas", async (req, res) => {
         res.status(500).send({ message: "Error al obtener areas", error: error.message });
     }
 });
-// ✅ Rutas para obtener datos /área
+// ✅ Rutas para obtener datos /fases
 app.get("/fasesVenta", async (req, res) => {
     try {
         const fasesVenta = await FaseVenta.find();  // Obtener todos los clientes
-        res.status(200).json(areas);  // Retorna los clientes como respuesta
+        res.status(200).json(fasesVenta);  // Retorna los clientes como respuesta
     } catch (error) {
-        console.error("❌ Error al obtener areas:", error);
+        console.error("❌ Error al obtener fasesVenta:", error);
         res.status(500).send({ message: "Error al obtener fases-venta", error: error.message });
     }
 });
