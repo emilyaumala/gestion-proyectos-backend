@@ -14,7 +14,8 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // 🟢 Modelo Cliente
 const clienteSchema = new mongoose.Schema({
-    nombre: { type: String, required: true },
+    ruc: String,
+    cliente: String, // Nombre del cliente
 });
 const Cliente = mongoose.model("Cliente", clienteSchema, "Cliente");
 
