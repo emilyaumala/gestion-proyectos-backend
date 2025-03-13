@@ -43,7 +43,7 @@ const Area = mongoose.model("Area", areaSchema, "Area");
 const faseVentaSchema = new mongoose.Schema({
     faseVenta: String, 
 });
-const Cliente = mongoose.model("FaseVenta", clienteSchema, "FaseVenta");
+const FaseVenta = mongoose.model("FaseVenta", clienteSchema, "FaseVenta");
 // ✅ Rutas para obtener datos
 app.get("/clientes", async (req, res) => {
     try {
