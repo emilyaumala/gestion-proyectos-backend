@@ -14,11 +14,12 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // Definir el modelo de datos para los proyectos
 const proyectoSchema = new mongoose.Schema({
-    ccliente: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Cliente', // Referencia al modelo Cliente
-        required: true
-    },
+    //ccliente: {
+    //    type: mongoose.Schema.Types.ObjectId,
+    //    ref: 'Cliente', // Referencia al modelo Cliente
+    //    required: true
+    //},
+  cliente: { type: String, required: true },
     nombreProyecto: { type: String, required: true },
     montoEstimado: { type: Number, required: true },
     faseVenta: { type: String, required: true },
