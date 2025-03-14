@@ -48,6 +48,10 @@ const FaseVenta = mongoose.model("FaseVenta", faseVentaSchema, "FaseVenta");
 const respComercialSchema = new mongoose.Schema({
     respComercial: String
 });
+// 🟢 Modelo RespTecnico
+const respTecnicoSchema = new mongoose.Schema({
+    respTecnico: String
+});
 const ResponsableComercial = mongoose.model("ResponsableComercial", respComercialSchema, "ResponsableComercial");
 // ✅ Rutas para obtener datos
 app.get("/clientes", async (req, res) => {
@@ -94,8 +98,14 @@ app.get("/responsables-comerciales", async (req, res) => {
     }
 });
 
-app.get("/responsables-tecnicos", (req, res) => {
-    res.json(["Andrea Martínez", "Roberto Sánchez", "Laura Fernández"]);
+app.get("/responsables-tecnicos", async (req, res) => {
+        try {
+        const responsablesTecnicos = await ResponsableTecnico.find();  // Obtener todos los clientes
+        res.status(200).json(responsablesTecnicos);  // Retorna los clientes como respuesta
+    } catch (error) {
+        console.error("❌ Error al obtener responsables-tecnicos:", error);
+        res.status(500).send({ message: "Error al obtener responsables-tecnicos", error: error.message });
+    }
 });
 
 // ✅ Ruta para guardar un proyecto
