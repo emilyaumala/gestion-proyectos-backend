@@ -44,11 +44,6 @@ const faseVentaSchema = new mongoose.Schema({
     faseVenta: String
 });
 const FaseVenta = mongoose.model("FaseVenta", faseVentaSchema, "FaseVenta");
-// 🟢 Modelo Responsable Comercial
-const responsableComercialSchema = new mongoose.Schema({
-    responsableComercial: String
-});
-const ResponsableComercial = mongoose.model("ResponsableComercial", responsableComercialSchema, "ResponsableComercial");
 // ✅ Rutas para obtener datos
 app.get("/clientes", async (req, res) => {
     try {
@@ -80,19 +75,12 @@ app.get("/fasesVenta", async (req, res) => {
     }
 });
 
-
 app.get("/probabilidad-venta", (req, res) => {
     res.json(["Baja", "Mediana", "Alta"]);
 });
-// ✅ Rutas para obtener datos/ respComerciales
-app.get("/responsablesComerciales", async (req, res) => {
-    try {
-        const responsablesComerciales = await ResponsableComercial.find();  // Obtener todos los clientes
-        res.status(200).json(responsablesComerciales);  // Retorna los clientes como respuesta
-    } catch (error) {
-        console.error("❌ Error al obtener responsables comerciales:", error);
-        res.status(500).send({ message: "Error al responsables comerciales", error: error.message });
-    }
+
+app.get("/responsables-comerciales", (req, res) => {
+    res.json(["Juan Pérez", "María Gómez", "Carlos López"]);
 });
 
 app.get("/responsables-tecnicos", (req, res) => {
@@ -115,6 +103,10 @@ const port = 5000;
 app.listen(port, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${port}`);
 });
+
+
+
+
 
 
 
