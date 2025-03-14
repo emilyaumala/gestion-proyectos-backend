@@ -169,7 +169,7 @@ app.post("/guardar", async (req, res) => {
 // ✅ Ruta para actualizar un proyecto
 app.post("/guardar1", async (req, res) => {
     try {
-        const nuevoActProyecto = new Oportunidades(req.body);
+        const nuevoActProyecto = new Oportunidad(req.body);
         await nuevoActProyecto.save();
         res.status(200).json({ message: "Actualización guardada correctamente" });
     } catch (error) {
