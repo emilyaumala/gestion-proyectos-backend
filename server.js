@@ -23,14 +23,14 @@ const Cliente = mongoose.model("Cliente", clienteSchema, "Cliente");
 const proyectoSchema = new mongoose.Schema({
     cliente: { type: mongoose.Schema.Types.ObjectId, ref: "Cliente", required: true },
     nombreProyecto: { type: String, required: true },
-    area: { type: String, required: true },
+    area: { type: mongoose.Schema.Types.ObjectId, ref: "Area", required: true },
     montoEstimado: { type: Number, required: true },
-    faseVenta: { type: String, required: true },
+    faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true },
     probabilidadVenta: { type: String, required: true },
     fechaInicio: { type: Date, required: true },
     fechaCierre: { type: Date, required: true },
-    respComercial: { type: String, required: true },
-    respTecnico: { type: String, required: true },
+    respComercial: { type: mongoose.Schema.Types.ObjectId, ref: "ResponsableComercial", required: true },
+    respTecnico: { type: mongoose.Schema.Types.ObjectId, ref: "ResponsableTecnico", required: true },
     observaciones: { type: String },
 });
 const Proyecto = mongoose.model("Proyecto", proyectoSchema, "Proyecto");
