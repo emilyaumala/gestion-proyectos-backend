@@ -41,9 +41,9 @@ const areaSchema = new mongoose.Schema({
 const Area = mongoose.model("Area", areaSchema, "Area");
 // 🟢 Modelo Fase de Venta
 const faseVentaSchema = new mongoose.Schema({
-    faseVenta: String, 
+    faseVenta: String
 });
-const FaseVenta = mongoose.model("FaseVenta", clienteSchema, "FaseVenta");
+const FaseVenta = mongoose.model("FaseVenta", faseVentaSchema, "FaseVenta");
 // ✅ Rutas para obtener datos
 app.get("/clientes", async (req, res) => {
     try {
