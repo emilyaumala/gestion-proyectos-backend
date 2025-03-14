@@ -87,7 +87,7 @@ app.get("/probabilidad-venta", (req, res) => {
 app.get("/responsables-comerciales", async (req, res) => {
         try {
         const responsablesComerciales = await ResponsableComercial.find();  // Obtener todos los clientes
-        res.status(200).json(responsables-comerciales);  // Retorna los clientes como respuesta
+        res.status(200).json(responsablesComerciales);  // Retorna los clientes como respuesta
     } catch (error) {
         console.error("❌ Error al obtener responsables-comerciales:", error);
         res.status(500).send({ message: "Error al obtener responsables-comerciales", error: error.message });
