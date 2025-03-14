@@ -60,7 +60,7 @@ const oportunidadSchema = new mongoose.Schema({
   }
 });
 
-const Oportunidad = mongoose.model("Oportunidad", oportunidadSchema);
+const Oportunidad = mongoose.model("Oportunidad", oportunidadSchema, "Oportunidad");
 // 🟢 Modelo Área
 const areaSchema = new mongoose.Schema({
     area: String
