@@ -80,7 +80,13 @@ app.get("/probabilidad-venta", (req, res) => {
 });
 
 app.get("/responsables-comerciales", (req, res) => {
-    res.json(["Juan Pérez", "María Gómez", "Carlos López"]);
+        try {
+        const responsables-comerciales = await ResponsableComercial.find();  // Obtener todos los clientes
+        res.status(200).json(responsables-comerciales);  // Retorna los clientes como respuesta
+    } catch (error) {
+        console.error("❌ Error al obtener responsables-comerciales:", error);
+        res.status(500).send({ message: "Error al obtener responsables-comerciales", error: error.message });
+    }
 });
 
 app.get("/responsables-tecnicos", (req, res) => {
