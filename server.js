@@ -139,6 +139,16 @@ app.post("/guardar", async (req, res) => {
         res.status(500).json({ message: "Error al guardar el proyecto" });
     }
 });
+// ✅ Ruta para actualizar un proyecto
+app.post("/oportunidades/guardar", async (req, res) => {
+    try {
+        const nuevoActProyecto = new Oportunidades(req.body);
+        await nuevoProyecto.save();
+        res.status(200).json({ message: "Actualización guardada correctamente" });
+    } catch (error) {
+        res.status(500).json({ message: "Error al actualizar el proyecto" });
+    }
+});
 
 // Configurar el puerto
 const port = 5000;
