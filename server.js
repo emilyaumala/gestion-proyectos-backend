@@ -37,13 +37,30 @@ const proyectoSchema = new mongoose.Schema({
 const Proyecto = mongoose.model("Proyecto", proyectoSchema, "Proyecto");
 // 🟢 Modelo Proyecto
 const oportunidadSchema = new mongoose.Schema({
-    nombreProyecto: { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true },
-    faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true },
-    fechaInicio: { type: Date, required: true },
-    fechaCierre: { type: Date, required: true },
-    observaciones: { type: String },
+  nombreProyecto: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Proyecto",
+    required: true
+  },
+  faseVenta: {
+    type: String,
+    required: true
+  },
+  fechaInicio: {
+    type: Date,
+    required: true
+  },
+  fechaCierre: {
+    type: Date,
+    required: true
+  },
+  observaciones: {
+    type: String,
+    default: "Sin observaciones"
+  }
 });
-const Oportunidad = mongoose.model("Oportunidad", oportunidadSchema, "Oportunidad");
+
+const Oportunidad = mongoose.model("Oportunidad", oportunidadSchema);
 // 🟢 Modelo Área
 const areaSchema = new mongoose.Schema({
     area: String
