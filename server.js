@@ -111,18 +111,22 @@ app.get("/responsables-tecnicos", async (req, res) => {
 // Ruta para obtener los proyectos
 app.get('/proyectos', async (req, res) => {
   try {
-    // Obtén los proyectos con los datos de cliente utilizando populate
+    // Obtén los proyectos con los datos relacionados utilizando populate para todos los campos necesarios
     const proyectos = await Proyecto.find()
-      .populate('cliente', 'cliente')
-        .populate('area', 'area')
+      .populate('cliente', 'cliente')  // Popula el campo 'cliente' con el nombre del cliente
+      .populate('area', 'area')        // Popula el campo 'area' con el nombre del área
+      .populate('faseVenta', 'faseVenta')  // Popula el campo 'faseVenta' con el nombre de la fase
+      .populate('respComercial', 'respComercial')  // Popula el campo 'respComercial' con el nombre del responsable comercial
+      .populate('respTecnico', 'respTecnico')  // Popula el campo 'respTecnico' con el nombre del responsable técnico
       .exec();
 
-    // Envía los proyectos con el nombre del cliente
+    // Envía los proyectos con todos los datos relacionados
     res.json(proyectos);
   } catch (error) {
     res.status(500).send('Error al obtener los proyectos');
   }
 });
+
 
 
 // ✅ Ruta para guardar un proyecto
