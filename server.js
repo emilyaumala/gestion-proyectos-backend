@@ -108,15 +108,19 @@ app.get("/responsables-tecnicos", async (req, res) => {
         res.status(500).send({ message: "Error al obtener responsables-tecnicos", error: error.message });
     }
 });
-// Ruta para obtener todos los proyectos
-app.get("/proyectos", async (req, res) => {
-    try {
-        const proyectos = await Proyecto.find().populate('cliente'); // Usamos populate para obtener el nombre del cliente, si es necesario
-        res.status(200).json(proyectos); // Retorna los proyectos como respuesta
-    } catch (error) {
-        console.error("❌ Error al obtener proyectos:", error);
-        res.status(500).send({ message: "Error al obtener proyectos", error: error.message });
-    }
+// Ruta para obtener los proyectos
+app.get('/proyectos', async (req, res) => {
+  try {
+    // Obtén los proyectos con los datos de cliente utilizando populate
+    const proyectos = await Proyecto.find()
+      .populate('cliente', 'cliente')  // Popula el campo 'cliente' con el nombre
+      .exec();
+
+    // Envía los proyectos con el nombre del cliente
+    res.json(proyectos);
+  } catch (error) {
+    res.status(500).send('Error al obtener los proyectos');
+  }
 });
 
 
