@@ -84,7 +84,7 @@ app.get("/probabilidad-venta", (req, res) => {
     res.json(["Baja", "Mediana", "Alta"]);
 });
 
-app.get("/responsables-comerciales", (req, res) => {
+app.get("/responsables-comerciales", async (req, res) => {
         try {
         const responsablesComerciales = await ResponsableComercial.find();  // Obtener todos los clientes
         res.status(200).json(responsables-comerciales);  // Retorna los clientes como respuesta
