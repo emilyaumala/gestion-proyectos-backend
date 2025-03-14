@@ -22,7 +22,7 @@ const Cliente = mongoose.model("Cliente", clienteSchema, "Cliente");
 // 🟢 Modelo Proyecto
 const proyectoSchema = new mongoose.Schema({
     cliente: { type: mongoose.Schema.Types.ObjectId, ref: "Cliente", required: true },
-    nombreProyecto { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true },
+    nombreProyecto: { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true },
     area: { type: mongoose.Schema.Types.ObjectId, ref: "Area", required: true },
     montoEstimado: { type: Number, required: true },
     faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true },
@@ -33,7 +33,17 @@ const proyectoSchema = new mongoose.Schema({
     respTecnico: { type: mongoose.Schema.Types.ObjectId, ref: "ResponsableTecnico", required: true },
     observaciones: { type: String },
 });
+
 const Proyecto = mongoose.model("Proyecto", proyectoSchema, "Proyecto");
+// 🟢 Modelo Proyecto
+const oportunidadSchema = new mongoose.Schema({
+    nombreProyecto: { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true },
+    faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true },
+    fechaInicio: { type: Date, required: true },
+    fechaCierre: { type: Date, required: true },
+    observaciones: { type: String },
+});
+const Oportunidad = mongoose.model("Oportunidad", oportunidadSchema, "Oportunidad");
 // 🟢 Modelo Área
 const areaSchema = new mongoose.Schema({
     area: String
@@ -140,10 +150,10 @@ app.post("/guardar", async (req, res) => {
     }
 });
 // ✅ Ruta para actualizar un proyecto
-app.post("/oportunidades/guardar", async (req, res) => {
+app.post("/guardar1", async (req, res) => {
     try {
         const nuevoActProyecto = new Oportunidades(req.body);
-        await nuevoProyecto.save();
+        await nuevoActProyecto.save();
         res.status(200).json({ message: "Actualización guardada correctamente" });
     } catch (error) {
         res.status(500).json({ message: "Error al actualizar el proyecto" });
