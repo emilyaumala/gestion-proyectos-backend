@@ -176,6 +176,26 @@ app.post("/guardar1", async (req, res) => {
         res.status(500).json({ message: "Error al actualizar el proyecto" });
     }
 });
+app.get('/api/oportunidad/:nombreProyecto', async (req, res) => {
+    const { nombreProyecto } = req.params;
+    
+    try {
+        // Obtener los registros de la base de datos, filtrados por nombreProyecto
+        const proyectos = await obtenerProyectosPorNombre(nombreProyecto);
+
+        // Ordenar los proyectos por fecha de inicio o por cualquier otro criterio
+        proyectos.sort((a, b) => new Date(a.fechaInicio) - new Date(b.fechaInicio));
+
+        if (proyectos.length === 0) {
+            return res.status(404).json({ mensaje: 'Proyecto no encontrado' });
+        }
+
+        res.json(proyectos);
+    } catch (error) {
+        res.status(500).json({ mensaje: 'Error al obtener los datos', error });
+    }
+});
+
 
 // Configurar el puerto
 const port = 5000;
