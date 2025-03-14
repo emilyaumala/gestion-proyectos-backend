@@ -113,7 +113,8 @@ app.get('/proyectos', async (req, res) => {
   try {
     // Obtén los proyectos con los datos de cliente utilizando populate
     const proyectos = await Proyecto.find()
-      .populate('cliente', 'cliente')  // Popula el campo 'cliente' con el nombre
+      .populate('cliente', 'cliente')
+        .populate('area', 'area')
       .exec();
 
     // Envía los proyectos con el nombre del cliente
