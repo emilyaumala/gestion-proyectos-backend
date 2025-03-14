@@ -43,6 +43,7 @@ const Area = mongoose.model("Area", areaSchema, "Area");
 const faseVentaSchema = new mongoose.Schema({
     faseVenta: String
 });
+const FaseVenta = mongoose.model("FaseVenta", faseVentaSchema, "FaseVenta");
 // 🟢 Modelo Responsable Comercial
 const responsableComercialSchema = new mongoose.Schema({
     responsableComercial: String
