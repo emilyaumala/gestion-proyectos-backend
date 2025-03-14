@@ -44,6 +44,11 @@ const faseVentaSchema = new mongoose.Schema({
     faseVenta: String
 });
 const FaseVenta = mongoose.model("FaseVenta", faseVentaSchema, "FaseVenta");
+// 🟢 Modelo RespComercial
+const respComercialSchema = new mongoose.Schema({
+    respComercial: String
+});
+const ResponsableComercial = mongoose.model("ResponsableComercial", respComercialSchema, "ResponsableComercial");
 // ✅ Rutas para obtener datos
 app.get("/clientes", async (req, res) => {
     try {
