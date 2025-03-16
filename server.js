@@ -35,31 +35,14 @@ const proyectoSchema = new mongoose.Schema({
 });
 
 const Proyecto = mongoose.model("Proyecto", proyectoSchema, "Proyecto");
-// 🟢 Modelo Proyecto
+// 🟢 Modelo Oportunidad (Actualizaciones del Proyecto)
 const oportunidadSchema = new mongoose.Schema({
-  nombreProyecto: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Proyecto",
-    required: true
-  },
-  faseVenta: {
-    type: String,
-    required: true
-  },
-  fechaInicio: {
-    type: Date,
-    required: true
-  },
-  fechaCierre: {
-    type: Date,
-    required: true
-  },
-  observaciones: {
-    type: String,
-    default: "Sin observaciones"
-  }
+    nombreProyecto: { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true },
+    faseVenta: { type: String, required: true },
+    fechaInicio: { type: Date, required: true },
+    fechaCierre: { type: Date, required: true },
+    observaciones: { type: String, default: "Sin observaciones" }
 });
-
 const Oportunidad = mongoose.model("Oportunidad", oportunidadSchema, "Oportunidad");
 // 🟢 Modelo Área
 const areaSchema = new mongoose.Schema({
@@ -176,24 +159,25 @@ app.post("/guardar1", async (req, res) => {
         res.status(500).json({ message: "Error al actualizar el proyecto" });
     }
 });
-app.get('/api/oportunidad/:nombreProyecto', async (req, res) => {
-    const { nombreProyecto } = req.params;
-    try {
-        const proyectos = await Oportunidad.find({ nombreProyecto }).sort({ fechaInicio: 1 });
+// ✅ Ruta para obtener las actualizaciones de un proyecto
+app.get("/api/oportunidad/:idProyecto", async (req, res) => {
+    const { idProyecto } = req.params;
 
-        if (proyectos.length === 0) {
-            return res.status(404).json({ mensaje: 'Proyecto no encontrado' });
+    try {
+        // Buscar todas las actualizaciones del proyecto en la colección "Oportunidad"
+        const oportunidades = await Oportunidad.find({ nombreProyecto: idProyecto })
+            .sort({ fechaInicio: 1 }); // Ordenar por fecha de inicio
+
+        if (oportunidades.length === 0) {
+            return res.status(404).json({ mensaje: "No hay actualizaciones para este proyecto" });
         }
 
-        res.json(proyectos);
+        res.json(oportunidades);
     } catch (error) {
-        res.status(500).json({ mensaje: 'Error al obtener los datos', error });
+        console.error("❌ Error al obtener actualizaciones del proyecto:", error);
+        res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
     }
 });
-
-
-
-
 // Configurar el puerto
 const port = 5000;
 app.listen(port, () => {
