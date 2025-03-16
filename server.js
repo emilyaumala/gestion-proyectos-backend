@@ -28,13 +28,16 @@ const proyectoSchema = new mongoose.Schema({
     faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true },
     probabilidadVenta: { type: String, required: true },
     fechaInicio: { type: String, required: true },
-    fechaCierre: { type: Date, required: true },
+    // Eliminar la línea que define fechaCierre
     respComercial: { type: mongoose.Schema.Types.ObjectId, ref: "ResponsableComercial", required: true },
     respTecnico: { type: mongoose.Schema.Types.ObjectId, ref: "ResponsableTecnico", required: true },
     observaciones: { type: String },
+    lapsoEjecucion: { type: String, required: true }, // Agregar lapsoEjecucion si es necesario
+    unidadLapso: { type: String, required: true } // Agregar unidadLapso si es necesario
 });
 
 const Proyecto = mongoose.model("Proyecto", proyectoSchema, "Proyecto");
+
 // 🟢 Modelo Oportunidad (Actualizaciones del Proyecto)
 const oportunidadSchema = new mongoose.Schema({
     nombreProyecto: { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true },
