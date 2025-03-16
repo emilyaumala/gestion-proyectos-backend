@@ -178,23 +178,22 @@ app.post("/guardar1", async (req, res) => {
 });
 app.get('/api/oportunidad/:nombreProyecto', async (req, res) => {
     const { nombreProyecto } = req.params;
-    
+
     try {
-        // Obtener los registros de la base de datos, filtrados por nombreProyecto
-        const proyectos = await obtenerProyectosPorNombre(nombreProyecto);
+        // Buscar todas las oportunidades relacionadas con ese proyecto
+        const actualizaciones = await Oportunidad.find({ nombreProyecto }).sort({ fechaInicio: 1 });
 
-        // Ordenar los proyectos por fecha de inicio o por cualquier otro criterio
-        proyectos.sort((a, b) => new Date(a.fechaInicio) - new Date(b.fechaInicio));
-
-        if (proyectos.length === 0) {
-            return res.status(404).json({ mensaje: 'Proyecto no encontrado' });
+        if (actualizaciones.length === 0) {
+            return res.status(404).json({ mensaje: 'No se encontraron actualizaciones para este proyecto' });
         }
 
-        res.json(proyectos);
+        res.json(actualizaciones);
     } catch (error) {
-        res.status(500).json({ mensaje: 'Error al obtener los datos', error });
+        console.error("❌ Error al obtener los datos:", error);
+        res.status(500).json({ mensaje: 'Error interno del servidor', error: error.message });
     }
 });
+
 
 
 // Configurar el puerto
