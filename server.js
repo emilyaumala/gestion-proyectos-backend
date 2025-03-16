@@ -161,7 +161,7 @@ app.post("/guardar1", async (req, res) => {
 });
 // ✅ Ruta para obtener las actualizaciones de un proyecto
 // Ruta corregida para obtener actualizaciones de un proyecto
-app.get("/api/oportunidad/:idProyecto", async (req, res) => {
+app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     const { idProyecto } = req.params;
 
     try {
@@ -169,6 +169,8 @@ app.get("/api/oportunidad/:idProyecto", async (req, res) => {
 
         // Buscar actualizaciones del proyecto en la colección "Oportunidad"
         const oportunidades = await Oportunidad.find({ nombreProyecto: new ObjectId(idProyecto) })
+            .populate('nombreProyecto', 'nombreProyecto')
+            .populate('faseVenta', 'faseVenta')
             .sort({ fechaInicio: 1 }); // Ordenar por fecha de inicio
 
         if (oportunidades.length === 0) {
