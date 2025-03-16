@@ -162,14 +162,17 @@ app.post("/guardar1", async (req, res) => {
 // ✅ Ruta para obtener las actualizaciones de un proyecto
 // Ruta corregida para obtener actualizaciones de un proyecto
 app.get("/informeOportunidad/:idProyecto", async (req, res) => {
-    try {
-        const { idProyecto } = req.params;
-        const ObjectId = mongoose.Types.ObjectId;
+    const { idProyecto } = req.params;
 
-        // Buscar oportunidades filtrando por ID del proyecto
-        const oportunidades = await Oportunidad.find({ nombreProyecto: new ObjectId(idProyecto) })
-            .populate("nombreProyecto", "nombreProyecto") // Obtener el nombre del proyecto
-            .sort({ fechaInicio: 1 }) // Ordenar por fecha de inicio
+    try {
+        // Convertir idProyecto en un ObjectId válido
+        const ObjectId = mongoose.Types.ObjectId;
+        const idConvertido = new ObjectId(idProyecto);
+
+        // Buscar oportunidades relacionadas con el proyecto
+        const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
+            .populate("nombreProyecto", "nombreProyecto") // Trae el nombre del proyecto
+            .sort({ fechaInicio: 1 }); // Ordenar por fecha de inicio
 
         if (!oportunidades.length) {
             return res.status(404).json({ mensaje: "No hay actualizaciones para este proyecto" });
@@ -177,10 +180,11 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
 
         res.json(oportunidades);
     } catch (error) {
-        console.error("❌ Error al obtener informe de oportunidades:", error);
-        res.status(500).json({ mensaje: "Error en el servidor", error: error.message });
+        console.error("❌ Error al obtener actualizaciones del proyecto:", error);
+        res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
     }
 });
+
 
 // Configurar el puerto
 const port = 5000;
