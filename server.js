@@ -178,21 +178,19 @@ app.post("/guardar1", async (req, res) => {
 });
 app.get('/api/oportunidad/:nombreProyecto', async (req, res) => {
     const { nombreProyecto } = req.params;
-
     try {
-        // Buscar todas las oportunidades relacionadas con ese proyecto
-        const actualizaciones = await Oportunidad.find({ nombreProyecto }).sort({ fechaInicio: 1 });
+        const proyectos = await Oportunidad.find({ nombreProyecto }).sort({ fechaInicio: 1 });
 
-        if (actualizaciones.length === 0) {
-            return res.status(404).json({ mensaje: 'No se encontraron actualizaciones para este proyecto' });
+        if (proyectos.length === 0) {
+            return res.status(404).json({ mensaje: 'Proyecto no encontrado' });
         }
 
-        res.json(actualizaciones);
+        res.json(proyectos);
     } catch (error) {
-        console.error("❌ Error al obtener los datos:", error);
-        res.status(500).json({ mensaje: 'Error interno del servidor', error: error.message });
+        res.status(500).json({ mensaje: 'Error al obtener los datos', error });
     }
 });
+
 
 
 
