@@ -32,8 +32,8 @@ const proyectoSchema = new mongoose.Schema({
     respComercial: { type: mongoose.Schema.Types.ObjectId, ref: "ResponsableComercial", required: true },
     respTecnico: { type: mongoose.Schema.Types.ObjectId, ref: "ResponsableTecnico", required: true },
     observaciones: { type: String },
-    lapsoEjecucion: { type: String, required: true }, // Agregar lapsoEjecucion si es necesario
-    unidadLapso: { type: String, required: true } // Agregar unidadLapso si es necesario
+   cantidadLapso: { type: Number, required: true }, // Aquí es la cantidad
+    unidadLapso: { type: String, required: true },  // Aquí es la unidad (días, meses, años)
 });
 
 const Proyecto = mongoose.model("Proyecto", proyectoSchema, "Proyecto");
