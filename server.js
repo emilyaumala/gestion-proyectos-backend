@@ -160,12 +160,15 @@ app.post("/guardar1", async (req, res) => {
     }
 });
 // ✅ Ruta para obtener las actualizaciones de un proyecto
+// Ruta corregida para obtener actualizaciones de un proyecto
 app.get("/api/oportunidad/:idProyecto", async (req, res) => {
     const { idProyecto } = req.params;
 
     try {
-        // Buscar todas las actualizaciones del proyecto en la colección "Oportunidad"
-        const oportunidades = await Oportunidad.find({ nombreProyecto: idProyecto })
+        const ObjectId = mongoose.Types.ObjectId; // Convertir a ObjectId
+
+        // Buscar actualizaciones del proyecto en la colección "Oportunidad"
+        const oportunidades = await Oportunidad.find({ nombreProyecto: new ObjectId(idProyecto) })
             .sort({ fechaInicio: 1 }); // Ordenar por fecha de inicio
 
         if (oportunidades.length === 0) {
