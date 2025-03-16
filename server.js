@@ -27,7 +27,7 @@ const proyectoSchema = new mongoose.Schema({
     montoEstimado: { type: Number, required: true },
     faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true },
     probabilidadVenta: { type: String, required: true },
-    fechaInicio: { type: Date, required: true },
+    fechaInicio: { type: String, required: true },
     fechaCierre: { type: Date, required: true },
     respComercial: { type: mongoose.Schema.Types.ObjectId, ref: "ResponsableComercial", required: true },
     respTecnico: { type: mongoose.Schema.Types.ObjectId, ref: "ResponsableTecnico", required: true },
