@@ -171,6 +171,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
         const oportunidades = await Oportunidad.find({ nombreProyecto: new ObjectId(idProyecto) })
             .populate('nombreProyecto', 'nombreProyecto')
             .populate('faseVenta', 'faseVenta')
+            .exec
             .sort({ fechaInicio: 1 }); // Ordenar por fecha de inicio
 
         if (oportunidades.length === 0) {
