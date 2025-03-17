@@ -166,42 +166,44 @@ app.post("/guardar1", async (req, res) => {
 // ✅ Ruta para obtener las actualizaciones de un proyecto
 // Ruta corregida para obtener actualizaciones de un proyecto
 app.get("/informeOportunidad/:idProyecto", async (req, res) => {
-    const { idProyecto } = req.params;
+  const { idProyecto } = req.params;
 
-    try {
-        // Convertir idProyecto en un ObjectId válido
-        const ObjectId = mongoose.Types.ObjectId;
-        const idConvertido = new ObjectId(idProyecto);
+  try {
+    // Convertir idProyecto en un ObjectId válido
+    const ObjectId = mongoose.Types.ObjectId;
+    const idConvertido = new ObjectId(idProyecto);
 
-        // Obtener el nombre del proyecto desde la colección Proyecto
-        const proyecto = await Proyecto.findById(idConvertido, "nombreProyecto");
+    // Obtener el nombre del proyecto desde la colección Proyecto
+    const proyecto = await Proyecto.findById(idConvertido, "nombreProyecto");
 
-        if (!proyecto) {
-            return res.status(404).json({ mensaje: "Proyecto no encontrado" });
-        }
-
-        // Buscar oportunidades relacionadas con el proyecto
-        const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
-            .populate("nombreProyecto", "nombreProyecto") // Trae la fase de venta
-            .populate("faseVenta", "faseVenta") // Trae la fase de venta
-            .sort({ fechaInicio: 1 }); // Ordenar por fecha de inicio
-
-        if (!oportunidades.length) {
-            return res.status(404).json({ mensaje: "No hay actualizaciones para este proyecto" });
-        }
-
-        // Añadir el nombre del proyecto a cada oportunidad
-        const oportunidadesConNombreProyecto = oportunidades.map(oportunidad => ({
-            ...oportunidad.toObject(),
-            nombreProyecto: proyecto.nombreProyecto
-        }));
-
-        res.json(oportunidadesConNombreProyecto);
-    } catch (error) {
-        console.error("❌ Error al obtener actualizaciones del proyecto:", error);
-        res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
+    if (!proyecto) {
+      return res.status(404).json({ mensaje: "Proyecto no encontrado" });
     }
+
+    // Buscar oportunidades relacionadas con el proyecto
+    const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
+      .populate("nombreProyecto", "nombreProyecto") // Trae la fase de venta
+      .populate("faseVenta", "faseVenta") // Trae la fase de venta
+      .sort({ fechaInicio: 1 }); // Ordenar por fecha de inicio
+
+    // Si no hay oportunidades, pero queremos mostrar el nombre del proyecto
+    if (!oportunidades.length) {
+      return res.json({ nombreProyecto: proyecto.nombreProyecto, oportunidades: [] });
+    }
+
+    // Si hay oportunidades, añadimos el nombre del proyecto a cada una
+    const oportunidadesConNombreProyecto = oportunidades.map((oportunidad) => ({
+      ...oportunidad.toObject(),
+      nombreProyecto: proyecto.nombreProyecto,
+    }));
+
+    res.json(oportunidadesConNombreProyecto);
+  } catch (error) {
+    console.error("❌ Error al obtener actualizaciones del proyecto:", error);
+    res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
+  }
 });
+
 
 
 
