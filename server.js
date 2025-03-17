@@ -195,6 +195,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
       area: area,
       montoEstimado: proyecto.montoEstimado,
       faseVentaProyecto: faseVentaProyecto,
+      probabilidadVenta: proyecto.probabilidadVenta,
       oportunidades: oportunidades.length ? oportunidades : [],
     });
   } catch (error) {
