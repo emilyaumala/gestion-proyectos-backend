@@ -174,24 +174,24 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
 
     // Obtener el nombre del proyecto y el área con populate si es necesario
     const proyecto = await Proyecto.findById(idConvertido)
-      .populate("area", "area") // Si area es un ObjectId referenciado
-      .populate("faseVenta", "faseVenta");
+      .populate("area", "area") // Si área es un ObjectId referenciado
+      .populate("faseVenta", "faseVenta"); // También populamos faseVenta
 
     if (!proyecto) {
       return res.status(404).json({ mensaje: "Proyecto no encontrado" });
     }
 
     // Extraer el área correctamente
-    const area = proyecto.area 
-      ? (proyecto.area.area || "Área no disponible") 
-      : "Área no disponible";
+    const area = proyecto.area ? proyecto.area.area || "Área no disponible" : "Área no disponible";
 
-          const faseVenta = proyecto.faseVenta
-      ? (proyecto.faseVenta.faseVenta || "Área no disponible") 
-      : "Área no disponible";
+    // Extraer la fase de venta del proyecto correctamente
+    const faseVentaProyecto = proyecto.faseVenta
+      ? proyecto.faseVenta.faseVenta || "Fase no disponible"
+      : "Fase no disponible";
 
     console.log("Proyecto encontrado:", proyecto);
     console.log("Área extraída:", area);
+    console.log("Fase de Venta del Proyecto:", faseVentaProyecto);
 
     // Buscar oportunidades asociadas al proyecto
     const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
@@ -201,13 +201,13 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
 
     console.log("Oportunidades encontradas:", oportunidades);
 
-    // Formatear la respuesta
+    // Formatear la respuesta con la faseVentaProyecto renombrada correctamente
     res.json({
       nombreProyecto: proyecto.nombreProyecto,
       area: area,
       montoEstimado: proyecto.montoEstimado,
-      faseVenta: faseVenta,
-      oportunidades: oportunidades.length ? oportunidades : []
+      faseVentaProyecto: faseVentaProyecto, // <-- Aquí está la corrección
+      oportunidades: oportunidades.length ? oportunidades : [],
     });
 
   } catch (error) {
@@ -215,6 +215,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
   }
 });
+
 
 
 
