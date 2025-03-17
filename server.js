@@ -166,44 +166,51 @@ app.post("/guardar1", async (req, res) => {
 // ✅ Ruta para obtener las actualizaciones de un proyecto
 // Ruta corregida para obtener actualizaciones de un proyecto
 app.get("/informeOportunidad/:idProyecto", async (req, res) => {
-    const { idProyecto } = req.params;
+  const { idProyecto } = req.params;
 
-    try {
-        // Convertir idProyecto en un ObjectId válido
-        const ObjectId = mongoose.Types.ObjectId;
-        const idConvertido = new ObjectId(idProyecto);
+  try {
+    // Convertir idProyecto en un ObjectId válido
+    const ObjectId = mongoose.Types.ObjectId;
+    const idConvertido = new ObjectId(idProyecto);
 
-        // Obtener el nombre del proyecto y el área (nombre dentro del objeto `area`) desde la colección Proyecto
-        const proyecto = await Proyecto.findById(idConvertido, "nombreProyecto area");
+    // Obtener el nombre del proyecto y el área desde la colección Proyecto
+    const proyecto = await Proyecto.findById(idConvertido, "nombreProyecto area");
 
-        if (!proyecto) {
-            return res.status(404).json({ mensaje: "Proyecto no encontrado" });
-        }
-
-        // Buscar oportunidades relacionadas con el proyecto
-        const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
-            .populate("nombreProyecto", "nombreProyecto")
-            .populate("faseVenta", "faseVenta")
-            .sort({ fechaInicio: 1 });
-
-        // Si no hay oportunidades, devolver un array vacío
-        const oportunidadesConNombreProyecto = oportunidades.map(oportunidad => ({
-            ...oportunidad.toObject(),
-            nombreProyecto: proyecto.nombreProyecto,
-            area: proyecto.area?.area || "Área no disponible"  // Acceder a 'nombre' dentro de 'area'
-        }));
-
-        // Enviar siempre el nombre del proyecto, área y las oportunidades
-        res.json({
-            nombreProyecto: proyecto.nombreProyecto,
-            area: proyecto.area?.area || "Área no disponible",  // Asegurarse de acceder al campo correcto dentro de 'area'
-            oportunidades: oportunidadesConNombreProyecto.length ? oportunidadesConNombreProyecto : []
-        });
-
-    } catch (error) {
-        console.error("❌ Error al obtener actualizaciones del proyecto:", error);
-        res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
+    if (!proyecto) {
+      return res.status(404).json({ mensaje: "Proyecto no encontrado" });
     }
+
+    // Si el campo 'area' es un objeto, extraer el nombre del área
+    const area = proyecto.area?.nombre || "Área no disponible";  // Extraer 'nombre' si 'area' es un objeto
+
+    // Buscar oportunidades relacionadas con el proyecto
+    const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
+      .populate("nombreProyecto", "nombreProyecto") // Trae la fase de venta
+      .populate("faseVenta", "faseVenta") // Trae la fase de venta
+      .sort({ fechaInicio: 1 }); // Ordenar por fecha de inicio
+
+    // Si no hay oportunidades, puedes incluir un mensaje en la respuesta
+    if (!oportunidades.length) {
+      return res.status(404).json({ mensaje: "No hay actualizaciones para este proyecto" });
+    }
+
+    // Añadir el nombre del proyecto y el área a cada oportunidad
+    const oportunidadesConNombreProyecto = oportunidades.map(oportunidad => ({
+      ...oportunidad.toObject(),
+      nombreProyecto: proyecto.nombreProyecto,
+      area: area // Añadir el área en la respuesta
+    }));
+
+    // Enviar la respuesta con el nombre del proyecto, área y las oportunidades
+    res.json({
+      nombreProyecto: proyecto.nombreProyecto,
+      area, // Incluir el área directamente en la respuesta
+      oportunidades: oportunidadesConNombreProyecto.length ? oportunidadesConNombreProyecto : [] // Oportunidades con nombre de proyecto y área
+    });
+  } catch (error) {
+    console.error("❌ Error al obtener actualizaciones del proyecto:", error);
+    res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
+  }
 });
 
 
