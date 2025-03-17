@@ -206,7 +206,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
       nombreProyecto: proyecto.nombreProyecto,
       area: area,
       montoEstimado: proyecto.montoEstimado,
-      faseVentaI: proyecto.faseVenta,
+      faseVentaI: proyecto.faseVentaI,
       oportunidades: oportunidades.length ? oportunidades : []
     });
 
