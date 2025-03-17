@@ -200,6 +200,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     res.json({
       nombreProyecto: proyecto.nombreProyecto,
       area: area,
+      montoEstimado: proyecto.montoEstimado,
       oportunidades: oportunidades.length ? oportunidades : []
     });
 
@@ -208,6 +209,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
   }
 });
+
 
 
 // Configurar el puerto
