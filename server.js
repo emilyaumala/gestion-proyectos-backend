@@ -169,7 +169,6 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
   const { idProyecto } = req.params;
 
   try {
-    // Convertir idProyecto en un ObjectId válido
     const ObjectId = mongoose.Types.ObjectId;
     const idConvertido = new ObjectId(idProyecto);
 
@@ -177,52 +176,35 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     const proyecto = await Proyecto.findById(idConvertido, "nombreProyecto area");
 
     if (!proyecto) {
-      console.log("Proyecto no encontrado.");
       return res.status(404).json({ mensaje: "Proyecto no encontrado" });
     }
 
-    // Verifica qué contiene 'proyecto'
+    // Extraer el nombre del área si es un objeto
+    const area = proyecto.area && proyecto.area.area ? proyecto.area.area : "Área no disponible";
+
     console.log("Proyecto encontrado:", proyecto);
+    console.log("Área:", area);
 
-    // Si el campo 'area' es un objeto, extraer el nombre del área
-    const area = proyecto.area && proyecto.area.nombre ? proyecto.area.nombre : "Área no disponible"; 
-
-    console.log("Área:", area); // Verifica el valor de área
-
-    // Buscar oportunidades relacionadas con el proyecto
+    // Buscar oportunidades asociadas al proyecto
     const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
       .populate("nombreProyecto", "nombreProyecto")
       .populate("faseVenta", "faseVenta")
       .sort({ fechaInicio: 1 });
 
-    // Si no hay oportunidades, puedes incluir un mensaje en la respuesta
-    if (!oportunidades.length) {
-      console.log("No hay oportunidades para este proyecto.");
-      return res.status(404).json({ mensaje: "No hay actualizaciones para este proyecto" });
-    }
+    console.log("Oportunidades encontradas:", oportunidades);
 
-    // Añadir el nombre del proyecto y el área a cada oportunidad
-    const oportunidadesConNombreProyecto = oportunidades.map(oportunidad => ({
-      ...oportunidad.toObject(),
-      nombreProyecto: proyecto.nombreProyecto,
-      area: area, // Añadir el área en la respuesta
-    }));
-
-    // Verifica las oportunidades antes de enviarlas
-    console.log("Oportunidades con nombreProyecto y área:", oportunidadesConNombreProyecto);
-
-    // Enviar la respuesta con el nombre del proyecto, área y las oportunidades
+    // Formatear la respuesta
     res.json({
       nombreProyecto: proyecto.nombreProyecto,
-      area: area, // Incluir el área directamente en la respuesta
-      oportunidades: oportunidadesConNombreProyecto.length ? oportunidadesConNombreProyecto : [],
+      area: area, // Incluir el área
+      oportunidades: oportunidades.length ? oportunidades : [] // Siempre devolver el array, aunque esté vacío
     });
+
   } catch (error) {
     console.error("❌ Error al obtener actualizaciones del proyecto:", error);
     res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
   }
 });
-
 
 // Configurar el puerto
 const port = 5000;
