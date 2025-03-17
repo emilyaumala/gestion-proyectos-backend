@@ -202,14 +202,16 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     console.log("Oportunidades encontradas:", oportunidades);
 
     // Formatear la respuesta con la faseVentaProyecto renombrada correctamente
-    res.json({
-      nombreProyecto: proyecto.nombreProyecto,
-      area: area,
-      montoEstimado: proyecto.montoEstimado,
-      faseVentaProyecto: faseVentaProyecto, // <-- Aquí está la corrección
-      oportunidades: oportunidades.length ? oportunidades : [],
-    });
-
+res.json({
+  nombreProyecto: proyecto.nombreProyecto,
+  area: area,
+  montoEstimado: proyecto.montoEstimado,
+  faseVentaProyecto: faseVentaProyecto, // Fase de venta del proyecto
+  oportunidades: oportunidades.map(op => ({
+    ...op.toObject(),
+    faseVenta: op.faseVenta ? op.faseVenta.faseVenta : "Fase no disponible"
+  })),
+});
   } catch (error) {
     console.error("❌ Error al obtener actualizaciones del proyecto:", error);
     res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
