@@ -173,8 +173,8 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     const ObjectId = mongoose.Types.ObjectId;
     const idConvertido = new ObjectId(idProyecto);
 
-    // Obtener el proyecto completo desde la colección Proyecto
-    const proyecto = await Proyecto.findById(idConvertido, "nombreProyecto area montoEstimado faseVenta probabilidadVenta fechaInicio respComercial respTecnico unidadLapso cantidadLapso");
+    // Obtener el nombre del proyecto desde la colección Proyecto
+    const proyecto = await Proyecto.findById(idConvertido, "nombreProyecto");
 
     if (!proyecto) {
       return res.status(404).json({ mensaje: "Proyecto no encontrado" });
@@ -186,42 +186,18 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
       .populate("faseVenta", "faseVenta") // Trae la fase de venta
       .sort({ fechaInicio: 1 }); // Ordenar por fecha de inicio
 
-    // Si no hay oportunidades, pero queremos mostrar el nombre del proyecto y datos adicionales
+    // Si no hay oportunidades, pero queremos mostrar el nombre del proyecto
     if (!oportunidades.length) {
-      return res.json({
-        nombreProyecto: proyecto.nombreProyecto,
-        area: proyecto.area,
-        montoEstimado: proyecto.montoEstimado,
-        faseVenta: proyecto.faseVenta,
-        probabilidadVenta: proyecto.probabilidadVenta,
-        fechaInicio: proyecto.fechaInicio,
-        respComercial: proyecto.respComercial,
-        respTecnico: proyecto.respTecnico,
-        unidadLapso: proyecto.unidadLapso,
-        cantidadLapso: proyecto.cantidadLapso,
-        oportunidades: [],
-      });
+      return res.json({ nombreProyecto: proyecto.nombreProyecto, oportunidades: [] });
     }
 
-    // Si hay oportunidades, añadimos el nombre del proyecto y los datos adicionales
+    // Si hay oportunidades, añadimos el nombre del proyecto a cada una
     const oportunidadesConNombreProyecto = oportunidades.map((oportunidad) => ({
       ...oportunidad.toObject(),
       nombreProyecto: proyecto.nombreProyecto,
     }));
 
-    res.json({
-      nombreProyecto: proyecto.nombreProyecto,
-      area: proyecto.area,
-      montoEstimado: proyecto.montoEstimado,
-      faseVenta: proyecto.faseVenta,
-      probabilidadVenta: proyecto.probabilidadVenta,
-      fechaInicio: proyecto.fechaInicio,
-      respComercial: proyecto.respComercial,
-      respTecnico: proyecto.respTecnico,
-      unidadLapso: proyecto.unidadLapso,
-      cantidadLapso: proyecto.cantidadLapso,
-      oportunidades: oportunidadesConNombreProyecto,
-    });
+    res.json(oportunidadesConNombreProyecto);
   } catch (error) {
     console.error("❌ Error al obtener actualizaciones del proyecto:", error);
     res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
