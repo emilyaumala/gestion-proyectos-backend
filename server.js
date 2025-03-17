@@ -163,7 +163,7 @@ app.post("/guardar", async (req, res) => {
         const oportunidad = new Oportunidad({
             nombreProyecto: nuevoProyecto._id,  
             montoEstimado: req.body.montoEstimado,
-            faseVenta: req.body.faseVenta
+            faseVenta: req.body.faseVenta.faseVenta
         });
 
         await oportunidad.save();
