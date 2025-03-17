@@ -174,37 +174,43 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
         const idConvertido = new ObjectId(idProyecto);
 
         // Obtener el nombre del proyecto desde la colección Proyecto
+        console.log("Buscando proyecto con id:", idConvertido);
         const proyecto = await Proyecto.findById(idConvertido, "nombreProyecto");
 
         if (!proyecto) {
+            console.log("Proyecto no encontrado");
             return res.status(404).json({ mensaje: "Proyecto no encontrado" });
         }
 
+        console.log("Proyecto encontrado:", proyecto.nombreProyecto);
+
         // Buscar oportunidades relacionadas con el proyecto
+        console.log("Buscando oportunidades para el proyecto:", idConvertido);
         const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
-            .populate("nombreProyecto", "nombreProyecto") // Trae el nombre del proyecto
-            .populate("faseVenta", "faseVenta") // Trae la fase de venta
-            .sort({ fechaInicio: 1 }); // Ordenar por fecha de inicio
+            .populate("nombreProyecto", "nombreProyecto")
+            .populate("faseVenta", "faseVenta")
+            .sort({ fechaInicio: 1 });
 
-        if (!oportunidades.length) {
-            return res.status(404).json({ mensaje: "No hay actualizaciones para este proyecto" });
-        }
+        console.log("Oportunidades encontradas:", oportunidades.length);
 
-        // Añadir el nombre del proyecto a cada oportunidad (si no hay oportunidades)
-        const oportunidadesConNombreProyecto = oportunidades.length
-            ? oportunidades.map((oportunidad) => ({
-                  ...oportunidad.toObject(),
-                  nombreProyecto: proyecto.nombreProyecto,
-              }))
-            : [];
+        // Si no hay oportunidades, podemos devolver un array vacío
+        const oportunidadesConNombreProyecto = oportunidades.map(oportunidad => ({
+            ...oportunidad.toObject(),
+            nombreProyecto: proyecto.nombreProyecto
+        }));
 
-        // Enviar las oportunidades con el nombre del proyecto (o vacío si no hay oportunidades)
-        res.json({ nombreProyecto: proyecto.nombreProyecto, oportunidades: oportunidadesConNombreProyecto });
+        // Enviar siempre el nombre del proyecto y las oportunidades (vacías si no hay actualizaciones)
+        res.json({
+            nombreProyecto: proyecto.nombreProyecto,
+            oportunidades: oportunidadesConNombreProyecto.length ? oportunidadesConNombreProyecto : []
+        });
+
     } catch (error) {
         console.error("❌ Error al obtener actualizaciones del proyecto:", error);
         res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
     }
 });
+
 
 // Configurar el puerto
 const port = 5000;
