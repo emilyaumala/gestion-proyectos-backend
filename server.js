@@ -186,7 +186,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
       ? (proyecto.area.area || "Área no disponible") 
       : "Área no disponible";
 
-          const faseVentaI = proyecto.faseVenta
+          const faseVenta = proyecto.faseVenta
       ? (proyecto.faseVenta.faseVenta || "Área no disponible") 
       : "Área no disponible";
 
@@ -206,7 +206,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
       nombreProyecto: proyecto.nombreProyecto,
       area: area,
       montoEstimado: proyecto.montoEstimado,
-      faseVentaI: faseVentaI,
+      faseVenta: faseVenta,
       oportunidades: oportunidades.length ? oportunidades : []
     });
 
