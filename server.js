@@ -145,25 +145,28 @@ app.get('/proyectos', async (req, res) => {
 
 // ✅ Ruta para guardar un proyecto
 app.post("/guardar", async (req, res) => {
+    console.log("Datos recibidos:", req.body);  // Esto te ayudará a ver qué está recibiendo el backend
+    
     try {
-        // Crear y guardar el nuevo proyecto en la colección Proyecto
         const nuevoProyecto = new Proyecto(req.body);
         await nuevoProyecto.save();
 
-        // Crear un nuevo documento en la colección Oportunidad con los datos necesarios
-        const nuevaOportunidad = new Oportunidad({
-            nombreProyecto: nuevoProyecto._id,  // Guardamos el ObjectId del proyecto
-            faseVenta: req.body.faseVenta,      // Fase de venta recibida en el cuerpo de la solicitud
-            montoEstimado: req.body.montoEstimado  // Monto estimado recibido en el cuerpo de la solicitud
+        // Aquí guardamos los datos de Oportunidad también
+        const oportunidad = new Oportunidad({
+            nombreProyecto: nuevoProyecto._id,  // Asegúrate de usar el ObjectId del proyecto creado
+           // faseVenta: req.body.faseVenta,
+            montoEstimado: req.body.montoEstimado
         });
-        
-        await nuevaOportunidad.save();
 
-        res.status(200).json({ message: "Proyecto y oportunidad guardados correctamente" });
+        await oportunidad.save(); // Guarda la oportunidad
+
+        res.status(200).json({ message: "Proyecto guardado correctamente" });
     } catch (error) {
-        res.status(500).json({ message: "Error al guardar el proyecto y oportunidad", error: error.message });
+        console.error("Error al guardar el proyecto:", error);
+        res.status(500).json({ message: "Error al guardar el proyecto" });
     }
 });
+
 
 // ✅ Ruta para actualizar un proyecto
 app.post("/guardar1", async (req, res) => {
