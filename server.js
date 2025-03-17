@@ -181,7 +181,11 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     }
 
     // Si el campo 'area' es un objeto, extraer el nombre del área
-    const area = proyecto.area && proyecto.area.nombre ? proyecto.area.nombre : "Área no disponible"; // Asegúrate de que 'area' sea un objeto y tenga un 'nombre'
+    const area = proyecto.area && proyecto.area.area ? proyecto.area.area : "Área no disponible"; // Asegúrate de que 'area' tenga un 'nombre'
+
+    // Log para verificar qué se está obteniendo de 'proyecto'
+    console.log("Proyecto encontrado:", proyecto);
+    console.log("Área:", area);
 
     // Buscar oportunidades relacionadas con el proyecto
     const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
@@ -200,6 +204,9 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
       nombreProyecto: proyecto.nombreProyecto,
       area: area, // Añadir el área en la respuesta
     }));
+
+    // Log para verificar que las oportunidades tienen la estructura correcta
+    console.log("Oportunidades con nombreProyecto y área:", oportunidadesConNombreProyecto);
 
     // Enviar la respuesta con el nombre del proyecto, área y las oportunidades
     res.json({
