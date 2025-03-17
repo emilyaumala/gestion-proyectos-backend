@@ -181,7 +181,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     }
 
     // Si el campo 'area' es un objeto, extraer el nombre del área
-    const area = proyecto.area?.nombre || "Área no disponible";  // Extraer 'nombre' si 'area' es un objeto
+    const area = proyecto.area?area || "Área no disponible";  // Extraer 'nombre' si 'area' es un objeto
 
     // Buscar oportunidades relacionadas con el proyecto
     const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
