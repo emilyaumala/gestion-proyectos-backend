@@ -208,7 +208,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
       respComercial: respComercial,
       respTecnico: respTecnico,
       observaciones: proyecto.observaciones,
-      lapsoEjecucion: `${proyecto.cantidadLapso} ${proyecto.unidadLapso}`
+      lapsoEjecucion: `${proyecto.cantidadLapso} ${proyecto.unidadLapso}`,
       oportunidades: oportunidades.length ? oportunidades : [],
     });
   } catch (error) {
