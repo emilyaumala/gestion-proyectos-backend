@@ -182,6 +182,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
 
         // Buscar oportunidades relacionadas con el proyecto
         const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
+            .populate("nombreProyecto", "nombreProyecto") // Trae la fase de venta
             .populate("faseVenta", "faseVenta") // Trae la fase de venta
             .sort({ fechaInicio: 1 }); // Ordenar por fecha de inicio
 
