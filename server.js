@@ -172,18 +172,21 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     const ObjectId = mongoose.Types.ObjectId;
     const idConvertido = new ObjectId(idProyecto);
 
-    // Obtener el nombre del proyecto y el área desde la colección Proyecto
-    const proyecto = await Proyecto.findById(idConvertido, "nombreProyecto area");
+    // Obtener el nombre del proyecto y el área con populate si es necesario
+    const proyecto = await Proyecto.findById(idConvertido)
+      .populate("area", "area"); // Si area es un ObjectId referenciado
 
     if (!proyecto) {
       return res.status(404).json({ mensaje: "Proyecto no encontrado" });
     }
 
-    // Extraer el nombre del área si es un objeto
-    const area = proyecto.area && proyecto.area.area ? proyecto.area.area : "Área no disponible";
+    // Extraer el área correctamente
+    const area = proyecto.area 
+      ? (proyecto.area.area || "Área no disponible") 
+      : "Área no disponible";
 
     console.log("Proyecto encontrado:", proyecto);
-    console.log("Área:", area);
+    console.log("Área extraída:", area);
 
     // Buscar oportunidades asociadas al proyecto
     const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
@@ -196,8 +199,8 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     // Formatear la respuesta
     res.json({
       nombreProyecto: proyecto.nombreProyecto,
-      area: area, // Incluir el área
-      oportunidades: oportunidades.length ? oportunidades : [] // Siempre devolver el array, aunque esté vacío
+      area: area,
+      oportunidades: oportunidades.length ? oportunidades : []
     });
 
   } catch (error) {
@@ -205,6 +208,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
   }
 });
+
 
 // Configurar el puerto
 const port = 5000;
