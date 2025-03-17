@@ -126,6 +126,7 @@ app.get('/proyectos', async (req, res) => {
   try {
     // Obtén los proyectos con los datos relacionados utilizando populate para todos los campos necesarios
     const proyectos = await Proyecto.find()
+        .populate('nombreProyecto', 'nombreProyecto')
       .populate('cliente', 'cliente')  // Popula el campo 'cliente' con el nombre del cliente
       .populate('area', 'area')        // Popula el campo 'area' con el nombre del área
       .populate('faseVenta', 'faseVenta')  // Popula el campo 'faseVenta' con el nombre de la fase
