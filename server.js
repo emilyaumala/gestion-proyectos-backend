@@ -175,7 +175,8 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     const proyecto = await Proyecto.findById(idConvertido)
       .populate("area", "area")
       .populate("faseVenta", "faseVenta")
-      .populate("respComercial", "respComercial");
+      .populate("respComercial", "respComercial")
+      .populate("respTecnico", "respTecnico");
 
     if (!proyecto) {
       return res.status(404).json({ mensaje: "Proyecto no encontrado" });
