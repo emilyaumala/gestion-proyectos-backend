@@ -173,35 +173,30 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
         const ObjectId = mongoose.Types.ObjectId;
         const idConvertido = new ObjectId(idProyecto);
 
-        // Obtener el nombre del proyecto desde la colección Proyecto
-        console.log("Buscando proyecto con id:", idConvertido);
-        const proyecto = await Proyecto.findById(idConvertido, "nombreProyecto");
+        // Obtener el nombre del proyecto y el área (nombre dentro del objeto `area`) desde la colección Proyecto
+        const proyecto = await Proyecto.findById(idConvertido, "nombreProyecto area");
 
         if (!proyecto) {
-            console.log("Proyecto no encontrado");
             return res.status(404).json({ mensaje: "Proyecto no encontrado" });
         }
 
-        console.log("Proyecto encontrado:", proyecto.nombreProyecto);
-
         // Buscar oportunidades relacionadas con el proyecto
-        console.log("Buscando oportunidades para el proyecto:", idConvertido);
         const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
             .populate("nombreProyecto", "nombreProyecto")
             .populate("faseVenta", "faseVenta")
             .sort({ fechaInicio: 1 });
 
-        console.log("Oportunidades encontradas:", oportunidades.length);
-
-        // Si no hay oportunidades, podemos devolver un array vacío
+        // Si no hay oportunidades, devolver un array vacío
         const oportunidadesConNombreProyecto = oportunidades.map(oportunidad => ({
             ...oportunidad.toObject(),
-            nombreProyecto: proyecto.nombreProyecto
+            nombreProyecto: proyecto.nombreProyecto,
+            area: proyecto.area?.area || "Área no disponible"  // Acceder a 'nombre' dentro de 'area'
         }));
 
-        // Enviar siempre el nombre del proyecto y las oportunidades (vacías si no hay actualizaciones)
+        // Enviar siempre el nombre del proyecto, área y las oportunidades
         res.json({
             nombreProyecto: proyecto.nombreProyecto,
+            area: proyecto.area?.area || "Área no disponible",  // Asegurarse de acceder al campo correcto dentro de 'area'
             oportunidades: oportunidadesConNombreProyecto.length ? oportunidadesConNombreProyecto : []
         });
 
