@@ -41,8 +41,8 @@ const Proyecto = mongoose.model("Proyecto", proyectoSchema, "Proyecto");
 // 🟢 Modelo Oportunidad (Actualizaciones del Proyecto)
 const oportunidadSchema = new mongoose.Schema({
     nombreProyecto: { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true },
-    montoEstimado: { type: Number, required: true }
-  //  faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true },
+    montoEstimado: { type: Number, required: true },
+    faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true }
   //  fechaInicio: { type: Date, required: true },
   //  fechaCierre: { type: Date, required: true },
   //  observaciones: { type: String, default: "Sin observaciones" }
@@ -162,7 +162,8 @@ app.post("/guardar", async (req, res) => {
         // Crear oportunidad
         const oportunidad = new Oportunidad({
             nombreProyecto: nuevoProyecto._id,  
-            montoEstimado: req.body.montoEstimado
+            montoEstimado: req.body.montoEstimado,
+            faseVenta: req.body.faseVenta
         });
 
         await oportunidad.save();
