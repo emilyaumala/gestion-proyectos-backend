@@ -181,13 +181,13 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     }
 
     // Si el campo 'area' es un objeto, extraer el nombre del área
-    const area = proyecto.area?area || "Área no disponible";  // Extraer 'nombre' si 'area' es un objeto
+    const area = proyecto.area && proyecto.area.nombre ? proyecto.area.nombre : "Área no disponible"; // Asegúrate de que 'area' sea un objeto y tenga un 'nombre'
 
     // Buscar oportunidades relacionadas con el proyecto
     const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
-      .populate("nombreProyecto", "nombreProyecto") // Trae la fase de venta
-      .populate("faseVenta", "faseVenta") // Trae la fase de venta
-      .sort({ fechaInicio: 1 }); // Ordenar por fecha de inicio
+      .populate("nombreProyecto", "nombreProyecto")
+      .populate("faseVenta", "faseVenta")
+      .sort({ fechaInicio: 1 });
 
     // Si no hay oportunidades, puedes incluir un mensaje en la respuesta
     if (!oportunidades.length) {
@@ -198,21 +198,20 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     const oportunidadesConNombreProyecto = oportunidades.map(oportunidad => ({
       ...oportunidad.toObject(),
       nombreProyecto: proyecto.nombreProyecto,
-      area: area // Añadir el área en la respuesta
+      area: area, // Añadir el área en la respuesta
     }));
 
     // Enviar la respuesta con el nombre del proyecto, área y las oportunidades
     res.json({
       nombreProyecto: proyecto.nombreProyecto,
-      area, // Incluir el área directamente en la respuesta
-      oportunidades: oportunidadesConNombreProyecto.length ? oportunidadesConNombreProyecto : [] // Oportunidades con nombre de proyecto y área
+      area: area, // Incluir el área directamente en la respuesta
+      oportunidades: oportunidadesConNombreProyecto.length ? oportunidadesConNombreProyecto : [],
     });
   } catch (error) {
     console.error("❌ Error al obtener actualizaciones del proyecto:", error);
     res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
   }
 });
-
 
 // Configurar el puerto
 const port = 5000;
