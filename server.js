@@ -177,25 +177,27 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     const proyecto = await Proyecto.findById(idConvertido, "nombreProyecto area");
 
     if (!proyecto) {
+      console.log("Proyecto no encontrado.");
       return res.status(404).json({ mensaje: "Proyecto no encontrado" });
     }
 
-    // Si el campo 'area' es un objeto, extraer el nombre del área
-    const area = proyecto.area && proyecto.area.area ? proyecto.area.area : "Área no disponible"; // Asegúrate de que 'area' tenga un 'nombre'
-
-    // Log para verificar qué se está obteniendo de 'proyecto'
+    // Verifica qué contiene 'proyecto'
     console.log("Proyecto encontrado:", proyecto);
-    console.log("Área:", area);
+
+    // Si el campo 'area' es un objeto, extraer el nombre del área
+    const area = proyecto.area && proyecto.area.nombre ? proyecto.area.nombre : "Área no disponible"; 
+
+    console.log("Área:", area); // Verifica el valor de área
 
     // Buscar oportunidades relacionadas con el proyecto
     const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
       .populate("nombreProyecto", "nombreProyecto")
       .populate("faseVenta", "faseVenta")
-    .populate("area", "area") 
       .sort({ fechaInicio: 1 });
 
     // Si no hay oportunidades, puedes incluir un mensaje en la respuesta
     if (!oportunidades.length) {
+      console.log("No hay oportunidades para este proyecto.");
       return res.status(404).json({ mensaje: "No hay actualizaciones para este proyecto" });
     }
 
@@ -206,7 +208,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
       area: area, // Añadir el área en la respuesta
     }));
 
-    // Log para verificar que las oportunidades tienen la estructura correcta
+    // Verifica las oportunidades antes de enviarlas
     console.log("Oportunidades con nombreProyecto y área:", oportunidadesConNombreProyecto);
 
     // Enviar la respuesta con el nombre del proyecto, área y las oportunidades
@@ -220,6 +222,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
   }
 });
+
 
 // Configurar el puerto
 const port = 5000;
