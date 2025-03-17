@@ -169,7 +169,7 @@ app.post("/guardar", async (req, res) => {
             faseVenta: req.body.faseVenta.faseVenta,
             fechaInicio: req.body.fechaInicio,
             probabilidadVenta: req.body.probabilidadVenta,
-            lapsoEjecucion: `${proyecto.cantidadLapso} ${proyecto.unidadLapso}`,
+            lapsoEjecucion: `${nuevoProyecto.cantidadLapso} ${nuevoProyecto.unidadLapso}`,
             observaciones: req.body.observaciones
         });
 
