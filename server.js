@@ -174,7 +174,8 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
 
     // Obtener el nombre del proyecto y el área con populate si es necesario
     const proyecto = await Proyecto.findById(idConvertido)
-      .populate("area", "area"); // Si area es un ObjectId referenciado
+      .populate("area", "area") // Si area es un ObjectId referenciado
+      .populate("faseVenta", "faseVenta");
 
     if (!proyecto) {
       return res.status(404).json({ mensaje: "Proyecto no encontrado" });
@@ -183,6 +184,10 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     // Extraer el área correctamente
     const area = proyecto.area 
       ? (proyecto.area.area || "Área no disponible") 
+      : "Área no disponible";
+
+          const faseVenta = proyecto.faseVenta
+      ? (proyecto.faseVenta.faseVenta || "Área no disponible") 
       : "Área no disponible";
 
     console.log("Proyecto encontrado:", proyecto);
@@ -201,6 +206,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
       nombreProyecto: proyecto.nombreProyecto,
       area: area,
       montoEstimado: proyecto.montoEstimado,
+      faseVenta: proyecto.faseVenta,
       oportunidades: oportunidades.length ? oportunidades : []
     });
 
