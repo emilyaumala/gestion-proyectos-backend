@@ -191,6 +191,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
       .populate("nombreProyecto", "nombreProyecto")
       .populate("faseVenta", "faseVenta")
+    .populate("area", "area") 
       .sort({ fechaInicio: 1 });
 
     // Si no hay oportunidades, puedes incluir un mensaje en la respuesta
