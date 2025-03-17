@@ -172,53 +172,36 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     const ObjectId = mongoose.Types.ObjectId;
     const idConvertido = new ObjectId(idProyecto);
 
-    // Obtener el nombre del proyecto y el área con populate si es necesario
     const proyecto = await Proyecto.findById(idConvertido)
-      .populate("area", "area") // Si área es un ObjectId referenciado
-      .populate("faseVenta", "faseVenta"); // También populamos faseVenta
+      .populate("area", "area")
+      .populate("faseVenta", "faseVenta");
 
     if (!proyecto) {
       return res.status(404).json({ mensaje: "Proyecto no encontrado" });
     }
 
-    // Extraer el área correctamente
-    const area = proyecto.area ? proyecto.area.area || "Área no disponible" : "Área no disponible";
-
-    // Extraer la fase de venta del proyecto correctamente
+    const area = proyecto.area ? proyecto.area.area : "Área no disponible";
     const faseVentaProyecto = proyecto.faseVenta
-      ? proyecto.faseVenta.faseVenta || "Fase no disponible"
+      ? proyecto.faseVenta.faseVenta
       : "Fase no disponible";
 
-    console.log("Proyecto encontrado:", proyecto);
-    console.log("Área extraída:", area);
-    console.log("Fase de Venta del Proyecto:", faseVentaProyecto);
-
-    // Buscar oportunidades asociadas al proyecto
+    // Obtener las oportunidades asociadas al proyecto
     const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
-      .populate("nombreProyecto", "nombreProyecto")
       .populate("faseVenta", "faseVenta")
       .sort({ fechaInicio: 1 });
 
-    console.log("Oportunidades encontradas:", oportunidades);
-
-    // Formatear la respuesta con la faseVentaProyecto renombrada correctamente
-res.json({
-  nombreProyecto: proyecto.nombreProyecto,
-  area: area,
-  montoEstimado: proyecto.montoEstimado,
-  faseVentaProyecto: faseVentaProyecto, // Fase de venta del proyecto
-  oportunidades: oportunidades.map(op => ({
-    ...op.toObject(),
-    faseVenta: op.faseVenta ? op.faseVenta.faseVenta : "Fase no disponible"
-  })),
-});
+    return res.json({
+      nombreProyecto: proyecto.nombreProyecto,
+      area: area,
+      montoEstimado: proyecto.montoEstimado,
+      faseVentaProyecto: faseVentaProyecto,
+      oportunidades: oportunidades.length ? oportunidades : [],
+    });
   } catch (error) {
-    console.error("❌ Error al obtener actualizaciones del proyecto:", error);
+    console.error("❌ Error al obtener las actualizaciones:", error);
     res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
   }
 });
-
-
 
 
 // Configurar el puerto
