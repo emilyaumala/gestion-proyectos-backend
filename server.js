@@ -42,8 +42,8 @@ const Proyecto = mongoose.model("Proyecto", proyectoSchema, "Proyecto");
 const oportunidadSchema = new mongoose.Schema({
     nombreProyecto: { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true },
     montoEstimado: { type: Number, required: true },
-    faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true }
-  //  fechaInicio: { type: Date, required: true },
+    faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true },
+    fechaInicio: { type: Date, required: true }
   //  fechaCierre: { type: Date, required: true },
   //  observaciones: { type: String, default: "Sin observaciones" }
 });
@@ -163,7 +163,8 @@ app.post("/guardar", async (req, res) => {
         const oportunidad = new Oportunidad({
             nombreProyecto: nuevoProyecto._id,  
             montoEstimado: req.body.montoEstimado,
-            faseVenta: req.body.faseVenta.faseVenta
+            faseVenta: req.body.faseVenta.faseVenta,
+            fechaInicio: req.body.fechaInicio
         });
 
         await oportunidad.save();
@@ -247,14 +248,3 @@ const port = 5000;
 app.listen(port, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${port}`);
 });
-
-
-
-
-
-
-
-
-
-
-
