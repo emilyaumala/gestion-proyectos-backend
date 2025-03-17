@@ -174,7 +174,8 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
 
     const proyecto = await Proyecto.findById(idConvertido)
       .populate("area", "area")
-      .populate("faseVenta", "faseVenta");
+      .populate("faseVenta", "faseVenta")
+      .populate("respComercial", "respComercial");
 
     if (!proyecto) {
       return res.status(404).json({ mensaje: "Proyecto no encontrado" });
@@ -184,6 +185,12 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     const faseVentaProyecto = proyecto.faseVenta
       ? proyecto.faseVenta.faseVenta
       : "Fase no disponible";
+    const respComercial = proyecto.respComercial
+      ? proyecto.respComercial.respComercial
+      : "Responsable comercial no disponible";
+    const respTecnico = proyecto.respTecnico
+      ? proyecto.respTecnico.respTecnico
+      : "Responsable tecnico no disponible";
 
     // Obtener las oportunidades asociadas al proyecto
     const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
@@ -197,6 +204,9 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
       faseVentaProyecto: faseVentaProyecto,
       probabilidadVenta: proyecto.probabilidadVenta,
       fechaInicio: proyecto.fechaInicio,
+      respComercial: respComercial,
+      respTecnico: respTecnico,
+      observaciones: proyecto.observaciones,
       oportunidades: oportunidades.length ? oportunidades : [],
     });
   } catch (error) {
