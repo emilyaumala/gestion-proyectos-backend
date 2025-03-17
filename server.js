@@ -45,8 +45,8 @@ const oportunidadSchema = new mongoose.Schema({
     faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true },
     fechaInicio: { type: Date, required: true },
     probabilidadVenta: { type: String, required: true },
-    cantidadLapso: { type: Number, required: true }, // Aquí es la cantidad
-    unidadLapso: { type: String, required: true },  // Aquí es la unidad (días, meses, años)
+   // cantidadLapso: { type: Number, required: true }, // Aquí es la cantidad
+   // unidadLapso: { type: String, required: true },  // Aquí es la unidad (días, meses, años)
   //  fechaCierre: { type: Date, required: true },
     observaciones: { type: String, default: "Sin observaciones" }
 });
@@ -169,11 +169,11 @@ app.post("/guardar", async (req, res) => {
         const oportunidadData = {
             nombreProyecto: proyectoEncontrado._id, // Aquí se guarda el ObjectId del nombre del proyecto
             montoEstimado: req.body.montoEstimado,
-            faseVenta: req.body.faseVenta.faseVenta || null,
+            faseVenta: req.body.faseVenta.faseVenta,
             fechaInicio: req.body.fechaInicio,
             probabilidadVenta: req.body.probabilidadVenta,
-            cantidadLapso: req.body.cantidadLapso,
-            unidadLapso: req.body.unidadLapso,
+            //cantidadLapso: req.body.cantidadLapso,
+            //unidadLapso: req.body.unidadLapso,
             observaciones: req.body.observaciones
         };
 
