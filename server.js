@@ -161,7 +161,7 @@ app.post("/guardar", async (req, res) => {
 });
 // ✅ Ruta para actualizar un proyecto
 
-router.post('/guardar1', async (req, res) => {
+app.post('/guardar1', async (req, res) => {
     try {
         const updatedData = req.body;
         
