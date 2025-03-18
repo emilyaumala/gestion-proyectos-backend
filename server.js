@@ -160,15 +160,35 @@ app.post("/guardar", async (req, res) => {
     }
 });
 // ✅ Ruta para actualizar un proyecto
-app.post("/guardar1", async (req, res) => {
+const express = require('express');
+const mongoose = require('mongoose');
+const Oportunidad = require('./models/Oportunidad');  // Tu modelo de Oportunidad
+const router = express.Router();
+
+router.post('/guardar1', async (req, res) => {
     try {
-        const nuevoActProyecto = new Oportunidad(req.body);
-        await nuevoActProyecto.save();
-        res.status(200).json({ message: "Actualización guardada correctamente" });
+        const updatedData = req.body;
+        
+        // Si estás utilizando el ID para identificar la oportunidad
+        const oportunidadActualizada = await Oportunidad.findByIdAndUpdate(
+            updatedData._id, // Asumiendo que el ID de la oportunidad se envía con los datos
+            updatedData, 
+            { new: true } // Esto garantiza que devuelvan los datos actualizados
+        );
+
+        if (!oportunidadActualizada) {
+            return res.status(404).json({ message: "Oportunidad no encontrada." });
+        }
+
+        res.status(200).json(oportunidadActualizada);
     } catch (error) {
-        res.status(500).json({ message: "Error al actualizar el proyecto" });
+        console.error("Error al actualizar la oportunidad:", error);
+        res.status(500).json({ message: "Hubo un error al actualizar la oportunidad." });
     }
 });
+
+module.exports = router;
+
 // ✅ Ruta para obtener las actualizaciones de un proyecto
 // Ruta corregida para obtener actualizaciones de un proyecto
 app.get("/informeOportunidad/:idProyecto", async (req, res) => {
