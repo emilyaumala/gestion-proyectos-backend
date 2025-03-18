@@ -46,11 +46,12 @@ const oportunidadSchema = new mongoose.Schema({
     fechaInicio: { type: Date, required: true },
     respComercial: { type: mongoose.Schema.Types.ObjectId, ref: "ResponsableComercial", required: true },
     respTecnico: { type: mongoose.Schema.Types.ObjectId, ref: "ResponsableTecnico", required: true },
-   cantidadLapso: { type: Number, required: true }, // Aquí es la cantidad
-    unidadLapso: { type: String, required: true },  // Aquí es la unidad (días, meses, años)
+    cantidadLapso: { type: Number, required: true },
+    unidadLapso: { type: String, required: true },
     probabilidadVenta: { type: String, required: true },
     observaciones: { type: String, default: "Sin observaciones" }
 });
+
 const Oportunidad = mongoose.model("Oportunidad", oportunidadSchema, "Oportunidad");
 // 🟢 Modelo Área
 const areaSchema = new mongoose.Schema({
