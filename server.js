@@ -149,30 +149,39 @@ app.post("/guardar", async (req, res) => {
     console.log("📩 Datos recibidos en el backend:", req.body);
 
     try {
-        // Verificar que faseVenta venga como un ObjectId válido
-        if (!mongoose.Types.ObjectId.isValid(req.body.faseVenta)) {
-            return res.status(400).json({ message: "faseVenta debe ser un ObjectId válido" });
-        }
-
         // Guardar el nuevo proyecto en la base de datos
         const nuevoProyecto = new Proyecto(req.body);
         await nuevoProyecto.save();
         console.log("✅ Proyecto guardado con ID:", nuevoProyecto._id);
 
-        // Crear y guardar la oportunidad
-        const oportunidad = new Oportunidad({
-            nombreProyecto:nuevoProyecto._id,
+        // Buscar el ObjectId del nombre del proyecto
+        const proyectoExistente = await Proyecto.findOne({ nombreProyecto: req.body.nombreProyecto });
+
+        if (!proyectoExistente) {
+            return res.status(400).json({ message: "El nombre del proyecto no existe en la base de datos" });
+        }
+
+        // Crear la oportunidad con el ObjectId del nombre del proyecto
+        const oportunidadData = {
+            nombreProyecto: proyectoExistente._id, // 🔹 Guardamos el ObjectId del nombre del proyecto
             montoEstimado: req.body.montoEstimado,
-            faseVenta: req.body.faseVenta.faseVenta,
+            faseVenta: req.body.faseVenta, 
             fechaInicio: req.body.fechaInicio,
             probabilidadVenta: req.body.probabilidadVenta,
+            cantidadLapso: req.body.cantidadLapso,
+            unidadLapso: req.body.unidadLapso,
             observaciones: req.body.observaciones
-        });
+        };
 
+        console.log("🟡 Datos de Oportunidad a guardar:", oportunidadData);
+
+        // Guardar la oportunidad en la base de datos
+        const oportunidad = new Oportunidad(oportunidadData);
         await oportunidad.save();
         console.log("✅ Oportunidad guardada correctamente");
 
         res.status(200).json({ message: "Proyecto y oportunidad guardados correctamente" });
+
     } catch (error) {
         console.error("❌ Error al guardar:", error);
         res.status(500).json({ message: "Error al guardar", error: error.message });
