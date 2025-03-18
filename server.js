@@ -165,7 +165,7 @@ app.post("/guardar", async (req, res) => {
         const oportunidadData = {
             nombreProyecto: proyectoExistente._id, // 🔹 Usamos el ObjectId del proyecto existente o recién creado
             montoEstimado: req.body.montoEstimado,
-            faseVenta: req.body.faseVenta, 
+            faseVenta: req.body.faseVenta.faseVenta, 
             fechaInicio: req.body.fechaInicio,
             probabilidadVenta: req.body.probabilidadVenta,
             cantidadLapso: req.body.cantidadLapso,
