@@ -160,28 +160,21 @@ app.post("/guardar", async (req, res) => {
     }
 });
 // ✅ Ruta para actualizar un proyecto
-
 app.post('/guardar1', async (req, res) => {
     try {
-        const updatedData = req.body;
-        
-        // Si estás utilizando el ID para identificar la oportunidad
-        const oportunidadActualizada = await Oportunidad.findByIdAndUpdate(
-            updatedData._id, // Asumiendo que el ID de la oportunidad se envía con los datos
-            updatedData, 
-            { new: true } // Esto garantiza que devuelvan los datos actualizados
-        );
+        const nuevaOportunidad = new Oportunidad({
+            ...req.body,  // Mantiene la estructura original
+            proyectoId: req.body.proyectoId, // Asegura que cada oportunidad se asocie a un proyecto
+        });
 
-        if (!oportunidadActualizada) {
-            return res.status(404).json({ message: "Oportunidad no encontrada." });
-        }
-
-        res.status(200).json(oportunidadActualizada);
+        const oportunidadGuardada = await nuevaOportunidad.save();
+        res.status(201).json(oportunidadGuardada);
     } catch (error) {
-        console.error("Error al actualizar la oportunidad:", error);
-        res.status(500).json({ message: "Hubo un error al actualizar la oportunidad." });
+        console.error("Error al guardar la oportunidad:", error);
+        res.status(500).json({ message: "Hubo un error al guardar la oportunidad." });
     }
 });
+
 
 // ✅ Ruta para obtener las actualizaciones de un proyecto
 // Ruta corregida para obtener actualizaciones de un proyecto
