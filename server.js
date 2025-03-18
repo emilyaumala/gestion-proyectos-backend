@@ -40,7 +40,8 @@ const Proyecto = mongoose.model("Proyecto", proyectoSchema, "Proyecto");
 
 // 🟢 Modelo Oportunidad (Actualizaciones del Proyecto)
 const oportunidadSchema = new mongoose.Schema({
-    nombreProyecto: { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true },
+    nombreProyecto: { type: String, required: true }, // Guardar el nombre del proyecto
+    proyectoId: { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true }, // Mantener la referencia
     faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true },
     montoEstimado: { type: Number, required: true },
     fechaInicio: { type: Date, required: true },
@@ -53,6 +54,7 @@ const oportunidadSchema = new mongoose.Schema({
 });
 
 const Oportunidad = mongoose.model("Oportunidad", oportunidadSchema, "Oportunidad");
+
 // 🟢 Modelo Área
 const areaSchema = new mongoose.Schema({
     area: String
