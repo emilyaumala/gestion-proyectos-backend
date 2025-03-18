@@ -45,9 +45,6 @@ const oportunidadSchema = new mongoose.Schema({
     faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true },
     fechaInicio: { type: Date, required: true },
     probabilidadVenta: { type: String, required: true },
-   // cantidadLapso: { type: Number, required: true }, // Aquí es la cantidad
-   // unidadLapso: { type: String, required: true },  // Aquí es la unidad (días, meses, años)
-  //  fechaCierre: { type: Date, required: true },
     observaciones: { type: String, default: "Sin observaciones" }
 });
 const Oportunidad = mongoose.model("Oportunidad", oportunidadSchema, "Oportunidad");
@@ -152,47 +149,35 @@ app.post("/guardar", async (req, res) => {
     console.log("📩 Datos recibidos en el backend:", req.body);
 
     try {
+        // Verificar que faseVenta venga como un ObjectId válido
+        if (!mongoose.Types.ObjectId.isValid(req.body.faseVenta)) {
+            return res.status(400).json({ message: "faseVenta debe ser un ObjectId válido" });
+        }
+
         // Guardar el nuevo proyecto en la base de datos
         const nuevoProyecto = new Proyecto(req.body);
         await nuevoProyecto.save();
         console.log("✅ Proyecto guardado con ID:", nuevoProyecto._id);
 
-        // Buscar el ObjectId del nombre del proyecto
-        const proyectoEncontrado = await Proyecto.findOne({ nombreProyecto: req.body.nombreProyecto });
-
-        if (!proyectoEncontrado) {
-            console.error("❌ Error: No se encontró un proyecto con ese nombre");
-            return res.status(404).json({ message: "No se encontró un proyecto con ese nombre" });
-        }
-
-        // Crear el objeto de oportunidad con el ObjectId del nombre del proyecto
-        const oportunidadData = {
-            nombreProyecto: proyectoEncontrado._id, // Aquí se guarda el ObjectId del nombre del proyecto
+        // Crear y guardar la oportunidad
+        const oportunidad = new Oportunidad({
+            nombreProyecto: nuevoProyecto._id,
             montoEstimado: req.body.montoEstimado,
-            faseVenta: req.body.faseVenta.faseVenta,
+            faseVenta: req.body.faseVenta,
             fechaInicio: req.body.fechaInicio,
             probabilidadVenta: req.body.probabilidadVenta,
-            //cantidadLapso: req.body.cantidadLapso,
-            //unidadLapso: req.body.unidadLapso,
             observaciones: req.body.observaciones
-        };
+        });
 
-        console.log("🟡 Datos de Oportunidad a guardar:", oportunidadData);
-
-        // Guardar la oportunidad en la base de datos
-        const oportunidad = new Oportunidad(oportunidadData);
         await oportunidad.save();
         console.log("✅ Oportunidad guardada correctamente");
 
         res.status(200).json({ message: "Proyecto y oportunidad guardados correctamente" });
-
     } catch (error) {
         console.error("❌ Error al guardar:", error);
         res.status(500).json({ message: "Error al guardar", error: error.message });
     }
 });
-
-
 
 // ✅ Ruta para actualizar un proyecto
 app.post("/guardar1", async (req, res) => {
