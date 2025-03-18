@@ -161,7 +161,7 @@ app.post("/guardar", async (req, res) => {
 
         // Crear y guardar la oportunidad
         const oportunidad = new Oportunidad({
-            nombreProyecto: nuevoProyecto._id,
+            nombreProyecto: req.body.nombreProyecto,
             montoEstimado: req.body.montoEstimado,
             faseVenta: req.body.faseVenta.faseVenta,
             fechaInicio: req.body.fechaInicio,
