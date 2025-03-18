@@ -183,8 +183,6 @@ router.post('/guardar1', async (req, res) => {
     }
 });
 
-module.exports = router;
-
 // ✅ Ruta para obtener las actualizaciones de un proyecto
 // Ruta corregida para obtener actualizaciones de un proyecto
 app.get("/informeOportunidad/:idProyecto", async (req, res) => {
