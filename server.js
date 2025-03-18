@@ -41,10 +41,9 @@ const Proyecto = mongoose.model("Proyecto", proyectoSchema, "Proyecto");
 // 🟢 Modelo Oportunidad (Actualizaciones del Proyecto)
 const oportunidadSchema = new mongoose.Schema({
     nombreProyecto: { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true },
-    montoEstimado: { type: Number, required: true },
     faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true },
     fechaInicio: { type: Date, required: true },
-    probabilidadVenta: { type: String, required: true },
+    fechaCierre: { type: Date, required: true },
     observaciones: { type: String, default: "Sin observaciones" }
 });
 const Oportunidad = mongoose.model("Oportunidad", oportunidadSchema, "Oportunidad");
@@ -146,47 +145,14 @@ app.get('/proyectos', async (req, res) => {
 
 // ✅ Ruta para guardar un proyecto
 app.post("/guardar", async (req, res) => {
-    console.log("📩 Datos recibidos en el backend:", req.body);
-
     try {
-        // Buscar si el proyecto ya existe por su nombre
-        let proyectoExistente = await Proyecto.findOne({ nombreProyecto: req.body.nombreProyecto });
-
-        if (!proyectoExistente) {
-            // Si no existe, crearlo y guardarlo
-            proyectoExistente = new Proyecto(req.body);
-            await proyectoExistente.save();
-            console.log("✅ Nuevo proyecto guardado con ID:", proyectoExistente._id);
-        } else {
-            console.log("⚠️ Proyecto ya existente con ID:", proyectoExistente._id);
-        }
-
-        // Crear la oportunidad con el ObjectId del nombre del proyecto
-        const oportunidadData = {
-            nombreProyecto: proyectoExistente._id, // 🔹 Usamos el ObjectId del proyecto existente o recién creado
-            montoEstimado: req.body.montoEstimado,
-            faseVenta: req.body.faseVenta, 
-            fechaInicio: req.body.fechaInicio,
-            probabilidadVenta: req.body.probabilidadVenta,
-            observaciones: req.body.observaciones
-        };
-
-        console.log("🟡 Datos de Oportunidad a guardar:", oportunidadData);
-
-        // Guardar la oportunidad en la base de datos
-        const oportunidad = new Oportunidad(oportunidadData);
-        await oportunidad.save();
-        console.log("✅ Oportunidad guardada correctamente");
-
-        res.status(200).json({ message: "Proyecto (sin duplicados) y oportunidad guardados correctamente" });
-
+        const nuevoProyecto = new Proyecto(req.body);
+        await nuevoProyecto.save();
+        res.status(200).json({ message: "Proyecto guardado correctamente" });
     } catch (error) {
-        console.error("❌ Error al guardar:", error);
-        res.status(500).json({ message: "Error al guardar", error: error.message });
+        res.status(500).json({ message: "Error al guardar el proyecto" });
     }
 });
-
-
 // ✅ Ruta para actualizar un proyecto
 app.post("/guardar1", async (req, res) => {
     try {
@@ -257,3 +223,13 @@ const port = 5000;
 app.listen(port, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${port}`);
 });
+
+
+
+
+
+
+
+
+
+
