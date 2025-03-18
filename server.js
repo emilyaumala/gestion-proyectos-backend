@@ -164,11 +164,15 @@ app.post("/guardar", async (req, res) => {
 // ✅ Ruta para actualizar un proyecto
 app.post('/guardar1', async (req, res) => {
     try {
+        // Convertir los campos que deberían ser ObjectId a ObjectId reales
         const nuevaOportunidad = new Oportunidad({
-            ...req.body,  // Mantiene la estructura original
-            proyectoId: req.body.proyectoId, // Asegura que cada oportunidad se asocie a un proyecto
+            faseVenta: mongoose.Types.ObjectId(req.body.faseVenta), // Convertir a ObjectId
+            respComercial: mongoose.Types.ObjectId(req.body.respComercial), // Convertir a ObjectId
+            respTecnico: mongoose.Types.ObjectId(req.body.respTecnico), // Convertir a ObjectId
+            proyectoId: mongoose.Types.ObjectId(req.body.proyectoId), // Convertir a ObjectId
         });
 
+        // Guardar la nueva oportunidad en la base de datos
         const oportunidadGuardada = await nuevaOportunidad.save();
         res.status(201).json(oportunidadGuardada);
     } catch (error) {
@@ -176,6 +180,7 @@ app.post('/guardar1', async (req, res) => {
         res.status(500).json({ message: "Hubo un error al guardar la oportunidad." });
     }
 });
+
 
 
 // ✅ Ruta para obtener las actualizaciones de un proyecto
