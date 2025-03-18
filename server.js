@@ -42,6 +42,7 @@ const Proyecto = mongoose.model("Proyecto", proyectoSchema, "Proyecto");
 const oportunidadSchema = new mongoose.Schema({
     nombreProyecto: { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true },
     faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true },
+    montoEstimado: { type: Number, required: true },
     fechaInicio: { type: Date, required: true },
     fechaCierre: { type: Date, required: true },
     observaciones: { type: String, default: "Sin observaciones" }
