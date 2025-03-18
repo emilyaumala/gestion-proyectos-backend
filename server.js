@@ -160,10 +160,6 @@ app.post("/guardar", async (req, res) => {
     }
 });
 // ✅ Ruta para actualizar un proyecto
-const express = require('express');
-const mongoose = require('mongoose');
-const Oportunidad = require('./models/Oportunidad');  // Tu modelo de Oportunidad
-const router = express.Router();
 
 router.post('/guardar1', async (req, res) => {
     try {
