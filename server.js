@@ -231,18 +231,42 @@ res.status(500).json({ message: "Error al guardar el proyecto y oportunidad", er
 // ✅ Ruta para actualizar un proyecto
 app.post('/guardar1', async (req, res) => {
     try {
-        console.log("📩 Datos recibidos:", req.body); // 🔴 Agregar esta línea para depuración
+        const {
+            faseVenta,
+            montoEstimado,
+            fechaInicio,
+            respComercial,
+            respTecnico,
+            cantidadLapso,
+            unidadLapso,
+            probabilidadVenta,
+            proyectoId
+        } = req.body;
 
-        const nuevaOportunidad = new Oportunidad({
-            ...req.body,  
-            proyectoId: req.body.proyectoId, 
-        });
+        // Buscar la oportunidad existente
+        const oportunidad = await Oportunidad.findOne({ proyectoId });
 
-        const oportunidadGuardada = await nuevaOportunidad.save();
-        res.status(201).json(oportunidadGuardada);
+        if (!oportunidad) {
+            return res.status(404).json({ message: "Oportunidad no encontrada" });
+        }
+
+        // Actualizar los campos solo si se pasaron valores nuevos
+        if (faseVenta) oportunidad.faseVenta = faseVenta;
+        if (montoEstimado) oportunidad.montoEstimado = montoEstimado;
+        if (fechaInicio) oportunidad.fechaInicio = fechaInicio;
+        if (respComercial) oportunidad.respComercial = respComercial;
+        if (respTecnico) oportunidad.respTecnico = respTecnico;
+        if (cantidadLapso) oportunidad.cantidadLapso = cantidadLapso;
+        if (unidadLapso) oportunidad.unidadLapso = unidadLapso;
+        if (probabilidadVenta) oportunidad.probabilidadVenta = probabilidadVenta;
+
+        // Guardar los cambios
+        await oportunidad.save();
+
+        res.status(200).json(oportunidad);
     } catch (error) {
-        console.error("❌ Error al guardar la oportunidad:", error);
-        res.status(500).json({ message: "Hubo un error al guardar la oportunidad.", error: error.message });
+        console.error(error);
+        res.status(500).json({ message: "Error al actualizar la oportunidad." });
     }
 });
 
