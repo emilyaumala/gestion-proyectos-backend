@@ -164,18 +164,21 @@ app.post("/guardar", async (req, res) => {
 // ✅ Ruta para actualizar un proyecto
 app.post('/guardar1', async (req, res) => {
     try {
+        console.log("📩 Datos recibidos:", req.body); // 🔴 Agregar esta línea para depuración
+
         const nuevaOportunidad = new Oportunidad({
-            ...req.body,  // Mantiene la estructura original
-            proyectoId: req.body.proyectoId, // Asegura que cada oportunidad se asocie a un proyecto
+            ...req.body,  
+            proyectoId: req.body.proyectoId, 
         });
 
         const oportunidadGuardada = await nuevaOportunidad.save();
         res.status(201).json(oportunidadGuardada);
     } catch (error) {
-        console.error("Error al guardar la oportunidad:", error);
-        res.status(500).json({ message: "Hubo un error al guardar la oportunidad." });
+        console.error("❌ Error al guardar la oportunidad:", error);
+        res.status(500).json({ message: "Hubo un error al guardar la oportunidad.", error: error.message });
     }
 });
+
 
 
 // ✅ Ruta para obtener las actualizaciones de un proyecto
