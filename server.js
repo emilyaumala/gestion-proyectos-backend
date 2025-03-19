@@ -154,6 +154,23 @@ app.get('/proyectos', async (req, res) => {
     res.status(500).send('Error al obtener los proyectos');
   }
 });
+app.get("/oportunidades/:proyectoId", async (req, res) => {
+  try {
+    const oportunidad = await Oportunidad.findOne({ proyectoId: req.params.proyectoId })
+      .sort({ createdAt: -1 }) // Obtener la última oportunidad
+      .limit(1); // Solo la más reciente
+
+    if (!oportunidad) {
+      return res.status(404).json({ message: "No se encontró la oportunidad para este proyecto" });
+    }
+
+    res.status(200).json(oportunidad);
+  } catch (error) {
+    console.error("Error al obtener oportunidad:", error);
+    res.status(500).json({ message: "Error al obtener oportunidad", error: error.message });
+  }
+});
+
 
 
 
