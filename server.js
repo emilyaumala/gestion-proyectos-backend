@@ -196,6 +196,9 @@ app.post("/guardar", async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error al guardar el proyecto y oportunidad" });
+        console.error("❌ Error al guardar:", error);
+res.status(500).json({ message: "Error al guardar el proyecto y oportunidad", error: error.message });
+
     }
 });
 
