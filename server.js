@@ -56,7 +56,8 @@ const oportunidadSchema = new mongoose.Schema({
     cantidadLapso: { type: Number, required: true },
     unidadLapso: { type: String, required: true },
     probabilidadVenta: { type: String, required: true },
-    observaciones: { type: String, default: "Sin observaciones" }
+    observaciones: { type: String, default: "Sin observaciones" },
+    createdAt: { type: Date, default: Date.now }
 });
 
 const Oportunidad = mongoose.model("Oportunidad", oportunidadSchema, "Oportunidad");
