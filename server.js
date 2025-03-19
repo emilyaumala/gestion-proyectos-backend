@@ -232,6 +232,7 @@ res.status(500).json({ message: "Error al guardar el proyecto y oportunidad", er
 app.post('/guardar1', async (req, res) => {
     try {
         const {
+            nombreProyecto,
             faseVenta,
             montoEstimado,
             fechaInicio,
@@ -240,28 +241,25 @@ app.post('/guardar1', async (req, res) => {
             cantidadLapso,
             unidadLapso,
             probabilidadVenta,
+            observaciones,
             proyectoId
         } = req.body;
-
-        // Buscar la oportunidad existente
-        const oportunidad = await Oportunidad.findOne({ proyectoId });
-
-        if (!oportunidad) {
-            return res.status(404).json({ message: "Oportunidad no encontrada" });
-        }
-
-        // Actualizar los campos solo si se pasaron valores nuevos
-        if (faseVenta) oportunidad.faseVenta = faseVenta;
-        if (montoEstimado) oportunidad.montoEstimado = montoEstimado;
-        if (fechaInicio) oportunidad.fechaInicio = fechaInicio;
-        if (respComercial) oportunidad.respComercial = respComercial;
-        if (respTecnico) oportunidad.respTecnico = respTecnico;
-        if (cantidadLapso) oportunidad.cantidadLapso = cantidadLapso;
-        if (unidadLapso) oportunidad.unidadLapso = unidadLapso;
-        if (probabilidadVenta) oportunidad.probabilidadVenta = probabilidadVenta;
-
-        // Guardar los cambios
-        await oportunidad.save();
+         const nuevaOportunidad = new Oportunidad({
+            nombreProyecto,
+            fechaInicio,
+            faseVenta,
+            respComercial,
+            respTecnico,
+            montoEstimado,
+            cantidadLapso,
+            unidadLapso,
+            probabilidadVenta,
+            observaciones,
+            proyectoId
+        });
+        // 4. Guardar la oportunidad
+        await nuevaOportunidad.save();
+    
 
         res.status(200).json(oportunidad);
     } catch (error) {
