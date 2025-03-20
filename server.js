@@ -326,7 +326,7 @@ console.log('unidadLapso:', proyecto.unidadLapso);
       respComercial: respComercial,
       respTecnico: respTecnico,
       observaciones: proyecto.observaciones,
-      lapsoEjecucion: `${proyecto.cantidadLapso} ${proyecto.unidadLapso}`,
+      apsoEjecucion: proyecto.lapsoEjecucion || "Lapso no disponible",
       oportunidades: oportunidades.length ? oportunidades : [],
     });
   } catch (error) {
