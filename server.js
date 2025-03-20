@@ -306,10 +306,9 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     const respComercial = proyecto.respComercial?.respComercial || "Responsable comercial no disponible";
     const respTecnico = proyecto.respTecnico?.respTecnico || "Responsable técnico no disponible";
     const cliente = proyecto.cliente?.cliente || "Cliente no disponible";
-const oportunidadesConLapso = oportunidades.map((oportunidad) => ({
-  ...oportunidad.toObject(),
-  lapsoEjecucion: `${oportunidad.cantidadLapso} ${oportunidad.unidadLapso}` || "Lapso no disponible",
-      console.log('cantidadLapso:', proyecto.cantidadLapso);
+    const oportunidadesConLapso = oportunidades.map((oportunidad) => ({
+      ...oportunidad.toObject(),
+  lapsoEjecucion: `${oportunidad.cantidadLapso} ${oportunidad.unidadLapso}` || "Lapso no disponible"})
 console.log('unidadLapso:', proyecto.unidadLapso);
 
 
