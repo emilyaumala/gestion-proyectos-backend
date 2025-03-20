@@ -275,6 +275,10 @@ app.post('/guardar1', async (req, res) => {
 
 // ✅ Ruta para obtener las actualizaciones de un proyecto
 // Ruta corregida para obtener actualizaciones de un proyecto
+const mongoose = require("mongoose");
+const Proyecto = require("./models/Proyecto");  // Asegúrate de ajustar el path
+const Oportunidad = require("./models/Oportunidad");
+
 app.get("/informeOportunidad/:idProyecto", async (req, res) => {
   const { idProyecto } = req.params;
 
@@ -282,34 +286,34 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     const ObjectId = mongoose.Types.ObjectId;
     const idConvertido = new ObjectId(idProyecto);
 
+    // 1. Buscar proyecto y poblar sus campos relacionados
     const proyecto = await Proyecto.findById(idConvertido)
       .populate("area", "area")
       .populate("faseVenta", "faseVenta")
       .populate("respComercial", "respComercial")
-      .populate("respTecnico", "respTecnico");
+      .populate("respTecnico", "respTecnico")
+      .populate("cliente", "nombreCliente"); // Si necesitas cliente
 
     if (!proyecto) {
       return res.status(404).json({ mensaje: "Proyecto no encontrado" });
     }
 
-    const area = proyecto.area ? proyecto.area.area : "Área no disponible";
-    const faseVentaProyecto = proyecto.faseVenta
-      ? proyecto.faseVenta.faseVenta
-      : "Fase no disponible";
-    const respComercial = proyecto.respComercial
-      ? proyecto.respComercial.respComercial
-      : "Responsable comercial no disponible";
-    const respTecnico = proyecto.respTecnico
-      ? proyecto.respTecnico.respTecnico
-      : "Responsable tecnico no disponible";
+    // 2. Formatear campos del proyecto
+    const area = proyecto.area?.area || "Área no disponible";
+    const faseVentaProyecto = proyecto.faseVenta?.faseVenta || "Fase no disponible";
+    const respComercial = proyecto.respComercial?.respComercial || "Responsable comercial no disponible";
+    const respTecnico = proyecto.respTecnico?.respTecnico || "Responsable técnico no disponible";
+    const cliente = proyecto.cliente?.nombreCliente || "Cliente no disponible";
 
-    // Obtener las oportunidades asociadas al proyecto
-    const oportunidades = await Oportunidad.find({ nombreProyecto: idConvertido })
+    // 3. Buscar oportunidades por proyectoId (no por nombreProyecto)
+    const oportunidades = await Oportunidad.find({ proyectoId: idConvertido })
       .populate("faseVenta", "faseVenta")
-      .sort({ fechaInicio: 1 });
+      .sort({ fechaInicio: 1 });  // Ordenar por fecha de inicio ascendente
 
+    // 4. Enviar datos del proyecto + oportunidades
     return res.json({
       nombreProyecto: proyecto.nombreProyecto,
+      cliente: cliente,
       area: area,
       montoEstimado: proyecto.montoEstimado,
       faseVentaProyecto: faseVentaProyecto,
@@ -326,7 +330,6 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
   }
 });
-
 
 // Configurar el puerto
 const port = 5000;
