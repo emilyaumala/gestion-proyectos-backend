@@ -162,7 +162,6 @@ app.get("/oportunidades/:proyectoId", async (req, res) => {
     const oportunidad = await Oportunidad.findOne({ proyectoId: req.params.proyectoId })
       .sort({ createdAt: -1 }) // Obtener la última oportunidad
       .limit(1) // Solo la más reciente
-      .populate('area', 'area') 
       .populate('faseVenta', 'faseVenta')  // Popula el campo 'faseVenta' con el nombre de la fase
       .populate('respComercial', 'respComercial')  // Popula el campo 'respComercial' con el nombre del responsable comercial
       .populate('respTecnico', 'respTecnico');  // Popula el campo 'respTecnico' con el nombre del responsable técnico
