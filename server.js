@@ -244,7 +244,8 @@ app.post('/guardar1', async (req, res) => {
             observaciones,
             proyectoId
         } = req.body;
-         const nuevaOportunidad = new Oportunidad({
+
+        const nuevaOportunidad = new Oportunidad({
             nombreProyecto,
             fechaInicio,
             faseVenta,
@@ -257,11 +258,10 @@ app.post('/guardar1', async (req, res) => {
             observaciones,
             proyectoId
         });
-        // 4. Guardar la oportunidad
-        await nuevaOportunidad.save();
-    
 
-        res.status(200).json(oportunidad);
+        await nuevaOportunidad.save();
+
+        res.status(200).json(nuevaOportunidad); // ✅ Aquí estaba el error
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error al actualizar la oportunidad." });
