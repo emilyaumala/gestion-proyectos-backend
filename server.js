@@ -411,10 +411,10 @@ app.get("/forecast", async (req, res) => {
 
       return {
         nombreProyecto: proyecto.nombreProyecto,
-        codigoProyecto: proyecto.codigoProyecto,
-        cliente: proyecto.cliente?.cliente,
-        fechaInicio: proyecto.fechaInicio,
-        montoEstimado: proyecto.montoEstimado,
+        codigoProyecto: ultimaOportunidad.codigoProyecto,
+        cliente: ultimaOportunidad.cliente?.cliente,
+        fechaInicio: ultimaOportunidad.fechaInicio,
+        montoEstimado: ultimaOportunidad.montoEstimado,
         probabilidadVenta: ultimaOportunidad.probabilidadVenta,
         forecastMensual,
         forecastAcumulado,
