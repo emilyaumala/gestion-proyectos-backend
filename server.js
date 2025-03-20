@@ -320,7 +320,7 @@ const oportunidadesConLapso = oportunidades.map((oportunidad) => ({
 return res.json({
   nombreProyecto: proyecto.nombreProyecto,
   codigoProyecto: proyecto.codigoProyecto,
-  cliente: cliente,
+  cliente: proyecto.cliente,
   area: area,
   montoEstimado: proyecto.montoEstimado,
   faseVentaProyecto: faseVentaProyecto,
