@@ -162,6 +162,7 @@ app.get("/oportunidades/:proyectoId", async (req, res) => {
     const oportunidad = await Oportunidad.findOne({ proyectoId: req.params.proyectoId })
       .sort({ createdAt: -1 }) // Obtener la última oportunidad
       .limit(1) // Solo la más reciente
+      .populate('area', 'area') 
       .populate('faseVenta', 'faseVenta')  // Popula el campo 'faseVenta' con el nombre de la fase
       .populate('respComercial', 'respComercial')  // Popula el campo 'respComercial' con el nombre del responsable comercial
       .populate('respTecnico', 'respTecnico');  // Popula el campo 'respTecnico' con el nombre del responsable técnico
@@ -191,6 +192,7 @@ app.post("/guardar", async (req, res) => {
         const {
             nombreProyecto,
             codigoProyecto,
+            area,
             fechaInicio,
             faseVenta,
             respComercial,
@@ -206,6 +208,7 @@ app.post("/guardar", async (req, res) => {
         const nuevaOportunidad = new Oportunidad({
             nombreProyecto,
             codigoProyecto,
+            area,
             fechaInicio,
             faseVenta,
             respComercial,
@@ -238,6 +241,7 @@ app.post('/guardar1', async (req, res) => {
         console.log("📥 Datos recibidos en el backend:", req.body); // 👈 DEBUG
 
         const {
+            area,
             nombreProyecto,
             codigoProyecto,
             faseVenta,
@@ -253,6 +257,7 @@ app.post('/guardar1', async (req, res) => {
         } = req.body;
 
         const nuevaOportunidad = new Oportunidad({
+            area,
             nombreProyecto,
             codigoProyecto,
             fechaInicio,
