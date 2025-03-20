@@ -23,7 +23,7 @@ const Cliente = mongoose.model("Cliente", clienteSchema, "Cliente");
 const proyectoSchema = new mongoose.Schema({
     cliente: { type: mongoose.Schema.Types.ObjectId, ref: "Cliente", required: true },
     nombreProyecto: { type: String, required: true },
-    codigoProyecto: { type: String, required: true },
+    codigoProyecto: { type: String, required: true, unique: true },
     proyectoId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
