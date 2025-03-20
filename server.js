@@ -364,12 +364,30 @@ app.get("/forecast", async (req, res) => {
 
     // Para cada proyecto, obtener las actualizaciones y calcular el pronóstico mensual ponderado
     const resultados = await Promise.all(proyectos.map(async (proyecto) => {
+      console.log("Procesando proyecto:", proyecto.nombreProyecto);
+
       // Obtener la última actualización de cada proyecto
       const ultimaOportunidad = await Oportunidad.findOne({ proyectoId: proyecto._id })
-        .sort({ createdAt: -1 }) // Obtener la última oportunidad
+        .sort({ createdAt: -1 })  // Obtener la última oportunidad
         .limit(1);
 
-      if (!ultimaOportunidad) return null;
+      if (!ultimaOportunidad) {
+        console.log("No hay oportunidad para el proyecto:", proyecto.nombreProyecto);
+
+        // Si no hay oportunidad, crear pronóstico vacío
+        return {
+          nombreProyecto: proyecto.nombreProyecto,
+          codigoProyecto: proyecto.codigoProyecto,
+          cliente: proyecto.cliente?.cliente,
+          fechaInicio: proyecto.fechaInicio,
+          montoEstimado: proyecto.montoEstimado,
+          probabilidadVenta: 'No disponible',  // O manejar esto según necesites
+          forecastMensual: Array(12).fill(0),
+          forecastAcumulado: Array(12).fill(0),
+        };
+      }
+
+      console.log("Última oportunidad encontrada:", ultimaOportunidad);
 
       // Asignar la probabilidad de venta y calcular el pronóstico ponderado
       const probabilidadVenta = probabilidad[ultimaOportunidad.probabilidadVenta] || 0;
@@ -379,6 +397,7 @@ app.get("/forecast", async (req, res) => {
 
       // Obtener el mes de inicio de la última actualización
       const mesInicio = new Date(ultimaOportunidad.fechaInicio).getMonth();  // Mes en formato 0-11 (Enero = 0)
+      console.log("Mes de inicio:", mesInicio);
 
       // Crear el pronóstico mensual basado en el mes de inicio
       const forecastMensual = Array(12).fill(0);  // Crear un array con 12 meses, inicialmente con 0
@@ -390,7 +409,6 @@ app.get("/forecast", async (req, res) => {
         return acc;
       }, []);
 
-      // Crear la respuesta para este proyecto
       return {
         nombreProyecto: proyecto.nombreProyecto,
         codigoProyecto: proyecto.codigoProyecto,
