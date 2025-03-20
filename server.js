@@ -48,7 +48,7 @@ const Proyecto = mongoose.model("Proyecto", proyectoSchema, "Proyecto");
 // 🟢 Modelo Oportunidad (Actualizaciones del Proyecto)
 const oportunidadSchema = new mongoose.Schema({
     nombreProyecto: { type: String, required: true }, // Guardar el nombre del proyecto
-    proyectoId: { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true }, // Mantener la referencia
+    codigoProyecto: { type: String, required: true }, // Mantener la referencia
     codigoProyecto: { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true },
     faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true },
     montoEstimado: { type: Number, required: true },
