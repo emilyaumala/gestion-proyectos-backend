@@ -303,6 +303,9 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     const lapsoEjecucion = (proyecto.cantidadLapso && proyecto.unidadLapso)
       ? `${proyecto.cantidadLapso} ${proyecto.unidadLapso}`
       : "Lapso no disponible"; // 🔹 revisión
+      console.log('cantidadLapso:', proyecto.cantidadLapso);
+console.log('unidadLapso:', proyecto.unidadLapso);
+
 
     // 3. Buscar oportunidades por proyectoId (no por nombreProyecto)
     const oportunidades = await Oportunidad.find({ proyectoId: idConvertido })
