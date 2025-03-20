@@ -306,7 +306,6 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
       .populate("faseVenta", "faseVenta")
               .populate("respComercial", "respComercial")
       .populate("respTecnico", "respTecnico")
-        .populate("cliente", "cliente")
       .sort({ fechaInicio: 1 });  // Ordenar por fecha de inicio ascendente
 
     // 4. Enviar datos del proyecto + oportunidades
