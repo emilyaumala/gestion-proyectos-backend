@@ -231,6 +231,8 @@ res.status(500).json({ message: "Error al guardar el proyecto y oportunidad", er
 // ✅ Ruta para actualizar un proyecto
 app.post('/guardar1', async (req, res) => {
     try {
+        console.log("📥 Datos recibidos en el backend:", req.body); // 👈 DEBUG
+
         const {
             nombreProyecto,
             faseVenta,
@@ -261,12 +263,13 @@ app.post('/guardar1', async (req, res) => {
 
         await nuevaOportunidad.save();
 
-        res.status(200).json(nuevaOportunidad); // ✅ Aquí estaba el error
+        res.status(200).json(nuevaOportunidad);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Error al actualizar la oportunidad." });
+        console.error("❌ Error al guardar:", error); // 👈 Mostrar error completo
+        res.status(500).json({ message: "Error al actualizar la oportunidad.", error: error.message }); // 👈 incluir el mensaje real
     }
 });
+
 
 
 
