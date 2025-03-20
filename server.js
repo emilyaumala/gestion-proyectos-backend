@@ -292,7 +292,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
       .populate("faseVenta", "faseVenta")
       .populate("respComercial", "respComercial")
       .populate("respTecnico", "respTecnico")
-      .populate("cliente", "nombreCliente"); // Si necesitas cliente
+      .populate("cliente", "cliente"); // Si necesitas cliente
 
     if (!proyecto) {
       return res.status(404).json({ mensaje: "Proyecto no encontrado" });
