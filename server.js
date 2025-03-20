@@ -299,44 +299,51 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     if (!proyecto) {
       return res.status(404).json({ mensaje: "Proyecto no encontrado" });
     }
+    // 3. Buscar oportunidades por proyectoId (no por nombreProyecto)
+    const oportunidades = await Oportunidad.find({ proyectoId: idConvertido })
+      .populate("faseVenta", "faseVenta")
+      .populate("respComercial", "respComercial")
+      .populate("respTecnico", "respTecnico")
+      .sort({ fechaInicio: 1 });  // Ordenar por fecha de inicio ascendente
 
     // 2. Formatear campos del proyecto
-   // 3. Buscar oportunidades por proyectoId (no por nombreProyecto)
-const oportunidades = await Oportunidad.find({ proyectoId: idConvertido })
-  .populate("faseVenta", "faseVenta")
-  .populate("respComercial", "respComercial")
-  .populate("respTecnico", "respTecnico")
-  .sort({ fechaInicio: 1 });  // Ordenar por fecha de inicio ascendente
-
-// ⬇️ Ahora sí puedes usar la variable oportunidades
-const oportunidadesConLapso = oportunidades.map((oportunidad) => ({
+    const area = proyecto.area?.area || "Área no disponible";
+    const faseVentaProyecto = proyecto.faseVenta?.faseVenta || "Fase no disponible";
+    const respComercial = proyecto.respComercial?.respComercial || "Responsable comercial no disponible";
+    const respTecnico = proyecto.respTecnico?.respTecnico || "Responsable técnico no disponible";
+    const cliente = proyecto.cliente?.cliente || "Cliente no disponible";
+    const oportunidadesConLapso = oportunidades.map((oportunidad) => ({
   ...oportunidad.toObject(),
   lapsoEjecucion: (oportunidad.cantidadLapso && oportunidad.unidadLapso)
     ? `${oportunidad.cantidadLapso} ${oportunidad.unidadLapso}`
     : "Lapso no disponible"
 }));
 
-// 4. Enviar datos del proyecto + oportunidades
-return res.json({
-  nombreProyecto: proyecto.nombreProyecto,
-  codigoProyecto: proyecto.codigoProyecto,
-  cliente: proyecto.cliente,
-  area: area,
-  montoEstimado: proyecto.montoEstimado,
-  faseVentaProyecto: faseVentaProyecto,
-  probabilidadVenta: proyecto.probabilidadVenta,
-  fechaInicio: proyecto.fechaInicio,
-  respComercial: respComercial,
-  respTecnico: respTecnico,
-  observaciones: proyecto.observaciones,
-  lapsoEjecucion: proyecto.lapsoEjecucion || "Lapso no disponible",
-  oportunidades: oportunidadesConLapso.length ? oportunidadesConLapso : [],
-});
+
+
+
+    // 4. Enviar datos del proyecto + oportunidades
+    return res.json({
+      nombreProyecto: proyecto.nombreProyecto,
+      codigoProyecto: proyecto.codigoProyecto,
+      cliente: cliente,
+      area: area,
+      montoEstimado: proyecto.montoEstimado,
+      faseVentaProyecto: faseVentaProyecto,
+      probabilidadVenta: proyecto.probabilidadVenta,
+      fechaInicio: proyecto.fechaInicio,
+      respComercial: respComercial,
+      respTecnico: respTecnico,
+      observaciones: proyecto.observaciones,
+      apsoEjecucion: proyecto.lapsoEjecucion || "Lapso no disponible",
+      oportunidades: oportunidades.length ? oportunidades : [],
+    });
   } catch (error) {
     console.error("❌ Error al obtener las actualizaciones:", error);
     res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
   }
 });
+
 
 // Configurar el puerto
 const port = 5000;
