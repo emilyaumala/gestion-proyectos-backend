@@ -1,4 +1,4 @@
-const express = require("express");
+    const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
@@ -366,7 +366,7 @@ app.get("/forecast", async (req, res) => {
     const resultados = await Promise.all(proyectos.map(async (proyecto) => {
       // Obtener la última actualización de cada proyecto
       const ultimaOportunidad = await Oportunidad.findOne({ proyectoId: proyecto._id })
-        .sort({ fechaInicio: -1 }) // Obtener la última oportunidad
+        .sort({ createdAt: -1 }) // Obtener la última oportunidad
         .limit(1);
 
       if (!ultimaOportunidad) return null;
