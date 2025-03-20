@@ -275,10 +275,6 @@ app.post('/guardar1', async (req, res) => {
 
 // ✅ Ruta para obtener las actualizaciones de un proyecto
 // Ruta corregida para obtener actualizaciones de un proyecto
-const mongoose = require("mongoose");
-const Proyecto = require("./models/Proyecto");  // Asegúrate de ajustar el path
-const Oportunidad = require("./models/Oportunidad");
-
 app.get("/informeOportunidad/:idProyecto", async (req, res) => {
   const { idProyecto } = req.params;
 
