@@ -299,7 +299,10 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     const faseVentaProyecto = proyecto.faseVenta?.faseVenta || "Fase no disponible";
     const respComercial = proyecto.respComercial?.respComercial || "Responsable comercial no disponible";
     const respTecnico = proyecto.respTecnico?.respTecnico || "Responsable técnico no disponible";
-    const cliente = proyecto.cliente?.nombreCliente || "Cliente no disponible";
+    const cliente = proyecto.cliente?.cliente || "Cliente no disponible";
+    const lapsoEjecucion = (proyecto.cantidadLapso && proyecto.unidadLapso)
+      ? `${proyecto.cantidadLapso} ${proyecto.unidadLapso}`
+      : "Lapso no disponible"; // 🔹 revisión
 
     // 3. Buscar oportunidades por proyectoId (no por nombreProyecto)
     const oportunidades = await Oportunidad.find({ proyectoId: idConvertido })
