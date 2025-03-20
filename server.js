@@ -343,6 +343,77 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     res.status(500).json({ mensaje: "Error al obtener las actualizaciones", error: error.message });
   }
 });
+// Ruta para obtener el forecast ponderado de proyectos
+app.get("/forecast", async (req, res) => {
+  try {
+    // Obtener todos los proyectos
+    const proyectos = await Proyecto.find()
+      .populate('cliente', 'cliente')  // Popula el campo 'cliente' con el nombre del cliente
+      .populate('area', 'area')        // Popula el campo 'area' con el nombre del área
+      .populate('faseVenta', 'faseVenta')  // Popula el campo 'faseVenta' con el nombre de la fase
+      .populate('respComercial', 'respComercial')  // Popula el campo 'respComercial' con el nombre del responsable comercial
+      .populate('respTecnico', 'respTecnico')  // Popula el campo 'respTecnico' con el nombre del responsable técnico
+      .exec();
+
+    // Definir las probabilidades de venta
+    const probabilidad = {
+      "Baja": 0.3,
+      "Mediana": 0.5,
+      "Alta": 0.7
+    };
+
+    // Para cada proyecto, obtener las actualizaciones y calcular el pronóstico mensual ponderado
+    const resultados = await Promise.all(proyectos.map(async (proyecto) => {
+      // Obtener la última actualización de cada proyecto
+      const ultimaOportunidad = await Oportunidad.findOne({ proyectoId: proyecto._id })
+        .sort({ fechaInicio: -1 }) // Obtener la última oportunidad
+        .limit(1);
+
+      if (!ultimaOportunidad) return null;
+
+      // Asignar la probabilidad de venta y calcular el pronóstico ponderado
+      const probabilidadVenta = probabilidad[ultimaOportunidad.probabilidadVenta] || 0;
+
+      // Calcular el pronóstico ponderado
+      const pronosticoPonderado = ultimaOportunidad.montoEstimado * probabilidadVenta;
+
+      // Obtener el mes de inicio de la última actualización
+      const mesInicio = new Date(ultimaOportunidad.fechaInicio).getMonth();  // Mes en formato 0-11 (Enero = 0)
+
+      // Crear el pronóstico mensual basado en el mes de inicio
+      const forecastMensual = Array(12).fill(0);  // Crear un array con 12 meses, inicialmente con 0
+      forecastMensual[mesInicio] = pronosticoPonderado;
+
+      // Calcular el forecast acumulado
+      const forecastAcumulado = forecastMensual.reduce((acc, current, index) => {
+        acc.push((acc[index - 1] || 0) + current);
+        return acc;
+      }, []);
+
+      // Crear la respuesta para este proyecto
+      return {
+        nombreProyecto: proyecto.nombreProyecto,
+        codigoProyecto: proyecto.codigoProyecto,
+        cliente: proyecto.cliente?.cliente,
+        fechaInicio: proyecto.fechaInicio,
+        montoEstimado: proyecto.montoEstimado,
+        probabilidadVenta: ultimaOportunidad.probabilidadVenta,
+        forecastMensual,
+        forecastAcumulado,
+      };
+    }));
+
+    // Filtrar los proyectos que no tienen oportunidades
+    const proyectosConPronostico = resultados.filter(proyecto => proyecto !== null);
+
+    // Enviar la respuesta
+    res.json(proyectosConPronostico);
+
+  } catch (error) {
+    console.error("❌ Error al calcular el pronóstico:", error);
+    res.status(500).json({ message: "Error al calcular el pronóstico", error: error.message });
+  }
+});
 
 
 // Configurar el puerto
