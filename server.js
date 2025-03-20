@@ -23,6 +23,7 @@ const Cliente = mongoose.model("Cliente", clienteSchema, "Cliente");
 const proyectoSchema = new mongoose.Schema({
     cliente: { type: mongoose.Schema.Types.ObjectId, ref: "Cliente", required: true },
     nombreProyecto: { type: String, required: true },
+    codigoProyecto: { type: String, required: true },
     proyectoId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
@@ -48,6 +49,7 @@ const Proyecto = mongoose.model("Proyecto", proyectoSchema, "Proyecto");
 const oportunidadSchema = new mongoose.Schema({
     nombreProyecto: { type: String, required: true }, // Guardar el nombre del proyecto
     proyectoId: { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true }, // Mantener la referencia
+    codigoProyecto: { type: mongoose.Schema.Types.ObjectId, ref: "Proyecto", required: true },
     faseVenta: { type: mongoose.Schema.Types.ObjectId, ref: "FaseVenta", required: true },
     montoEstimado: { type: Number, required: true },
     fechaInicio: { type: Date, required: true },
@@ -141,7 +143,7 @@ app.get('/proyectos', async (req, res) => {
   try {
     // Obtén los proyectos con los datos relacionados utilizando populate para todos los campos necesarios
     const proyectos = await Proyecto.find()
-        .populate('nombreProyecto', 'nombreProyecto')
+      .populate('nombreProyecto', 'nombreProyecto')
       .populate('cliente', 'cliente')  // Popula el campo 'cliente' con el nombre del cliente
       .populate('area', 'area')        // Popula el campo 'area' con el nombre del área
       .populate('faseVenta', 'faseVenta')  // Popula el campo 'faseVenta' con el nombre de la fase
@@ -188,6 +190,7 @@ app.post("/guardar", async (req, res) => {
         // 2. Extraer solo los campos necesarios para Oportunidad
         const {
             nombreProyecto,
+            codigoProyecto,
             fechaInicio,
             faseVenta,
             respComercial,
@@ -202,6 +205,7 @@ app.post("/guardar", async (req, res) => {
         // 3. Crear el objeto oportunidad con proyectoId
         const nuevaOportunidad = new Oportunidad({
             nombreProyecto,
+            codigoProyecto,
             fechaInicio,
             faseVenta,
             respComercial,
@@ -235,6 +239,7 @@ app.post('/guardar1', async (req, res) => {
 
         const {
             nombreProyecto,
+            codigoProyecto,
             faseVenta,
             montoEstimado,
             fechaInicio,
@@ -249,6 +254,7 @@ app.post('/guardar1', async (req, res) => {
 
         const nuevaOportunidad = new Oportunidad({
             nombreProyecto,
+            codigoProyecto,
             fechaInicio,
             faseVenta,
             respComercial,
@@ -317,6 +323,7 @@ console.log('unidadLapso:', proyecto.unidadLapso);
     // 4. Enviar datos del proyecto + oportunidades
     return res.json({
       nombreProyecto: proyecto.nombreProyecto,
+      codigoProyecto: proyecto.codigoProyecto,
       cliente: cliente,
       area: area,
       montoEstimado: proyecto.montoEstimado,
