@@ -280,9 +280,6 @@ app.post('/guardar1', async (req, res) => {
     }
 });
 
-
-
-
 // ✅ Ruta para obtener las actualizaciones de un proyecto
 // Ruta corregida para obtener actualizaciones de un proyecto
 app.get("/informeOportunidad/:idProyecto", async (req, res) => {
@@ -308,8 +305,7 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
       .populate("faseVenta", "faseVenta")
       .populate("respComercial", "respComercial")
       .populate("respTecnico", "respTecnico")
-      .sort({ fechaInicio: 1 });  // Ordenar por fecha de inicio ascendente
-
+      .sort({ createAt: 1 });  // Ordenar por fecha de inicio ascendente
     // 2. Formatear campos del proyecto
     const area = proyecto.area?.area || "Área no disponible";
     const faseVentaProyecto = proyecto.faseVenta?.faseVenta || "Fase no disponible";
@@ -322,10 +318,6 @@ app.get("/informeOportunidad/:idProyecto", async (req, res) => {
     ? `${oportunidad.cantidadLapso} ${oportunidad.unidadLapso}`
     : "Lapso no disponible"
 }));
-
-
-
-
     // 4. Enviar datos del proyecto + oportunidades
     return res.json({
       nombreProyecto: proyecto.nombreProyecto,
